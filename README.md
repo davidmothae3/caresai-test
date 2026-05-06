@@ -21,6 +21,8 @@ In the web-app interface, we will integrate the Machine learning Model and with 
 
 **WORKING**
 The working of the system starts with the collection of data and selecting the important attributes. Then the required data is preprocessed into the required format. The data is then divided into two parts training and testing data. The algorithms are applied and the model is trained using the training data. The accuracy of the system is obtained by testing the system using the testing data. This system is implemented using the following modules.
+
+**Modules**
 Collection of Dataset
 Selection of attributes
 Data Pre-Processing

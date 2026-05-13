@@ -25,6 +25,10 @@ Classification Report:
     accuracy                           0.95       814
    macro avg       0.94      0.90      0.92       814
 weighted avg       0.95      0.95      0.95       814
+
+
+
+
 The model demonstrates strong performance, especially for risk_level 1, with a high overall accuracy. The confusion matrix also provides a visual representation of the model's predictions versus the actual values.
 
 We've made significant progress in analyzing your dataset and building predictive models. Here's a summary of what we've accomplished:

@@ -25,15 +25,6 @@ We've made significant progress in analyzing your dataset and building predictiv
 
 Data Preprocessing and Cleaning: We started by importing your CARES.csv dataset, handling missing values, and encoding categorical features like elevation_zone, highland, and risk_level into numerical representations. We also dropped non-numerical and non-contributing columns (year, month, district, community, record_type, u5_population, temperature_min_c, temperature_max_c).
 
-Random Forest Classifier (Target: risk_level): We trained a Random Forest Classifier to predict risk_level.
-
-Initial Results: The model initially showed perfect scores (1.00 accuracy, precision, recall, f1-score). I raised a concern about potential data leakage or overfitting due to these unusually high scores.
-Feature Importance: risk_score was identified as the most important feature (0.50), followed by diarrhoea_rate_per1000 (0.16) and rainfall_mm (0.10).
-Confusion Matrix: The confusion matrix for this model confirmed perfect classification across all risk levels, reinforcing the concern about data leakage.
-Random Forest Regressor (Target: risk_score): We then shifted focus to a regression task, predicting risk_score using a RandomForestRegressor.
-
-Performance: This model performed very well, achieving an R-squared of 0.9898, a Mean Absolute Error (MAE) of 0.7646, and a Mean Squared Error (MSE) of 1.1298.
-Feature Importance: For the regression task, diarrhoea_rate_per1000 emerged as the most important feature (0.75), followed by rainfall_mm (0.10) and ari_rate_per1000 (0.10).
 Convolutional Neural Network (CNN) for Tabular Data (Target: risk_level): Most recently, we implemented and evaluated a 1D CNN model.
 
 Performance: The CNN achieved a Test Loss of 0.1375 and a Test Accuracy of 0.9484. The classification report showed strong performance, with high precision, recall, and f1-scores for the different risk_level classes (e.g., 0.97 f1-score for class 1).

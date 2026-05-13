@@ -1,5 +1,5 @@
+**RESULTS** 
 
-** RESULTS** 
 I have implement a Convolutional Neural Network (CNN) on our dataset. Since our data is tabular, I adapted it by reshaping the features to be suitable for a 1D CNN. We'll use the risk_level as the target variable for this classification task. After defining and training the model, I'll evaluate its performance with a classification report and a confusion matrix.
 
 The CNN model for predicting risk_level has been trained and evaluated.

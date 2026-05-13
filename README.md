@@ -12,19 +12,7 @@ The CNN model for predicting risk_level has been trained and evaluated.
 
 Here are the performance metrics:
 
-CNN Test Loss: 0.1375
-CNN Test Accuracy: 0.9484
-Classification Report:
-
-              precision    recall  f1-score   support
-
-           0       0.99      0.82      0.90       140
-           1       0.95      0.98      0.97       596
-           2       0.89      0.91      0.90        78
-
-    accuracy                           0.95       814
-   macro avg       0.94      0.90      0.92       814
-weighted avg       0.95      0.95      0.95       814
+<img width="735" height="393" alt="image" src="https://github.com/user-attachments/assets/d39379d1-de63-45c3-a7f3-d18408e097c4" />
 
 
 

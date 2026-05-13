@@ -29,3 +29,6 @@ Convolutional Neural Network (CNN) for Tabular Data (Target: risk_level): Most r
 
 Performance: The CNN achieved a Test Loss of 0.1375 and a Test Accuracy of 0.9484. The classification report showed strong performance, with high precision, recall, and f1-scores for the different risk_level classes (e.g., 0.97 f1-score for class 1).
 Confusion Matrix: The confusion matrix indicated that the CNN model made only a few misclassifications, demonstrating good predictive capabilities.
+
+**Explainable AI**
+To provide a more comprehensive understanding of your CNN model's predictions, I will apply SHAP (SHapley Additive exPlanations). SHAP is a powerful method that explains the contribution of each feature to a prediction. This will help us understand which features are most important for the CNN's output, both globally and for individual predictions.

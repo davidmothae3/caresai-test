@@ -14,6 +14,7 @@ Here are the performance metrics:
 
 <img width="735" height="393" alt="image" src="https://github.com/user-attachments/assets/d39379d1-de63-45c3-a7f3-d18408e097c4" />
 
+<img width="610" height="547" alt="image" src="https://github.com/user-attachments/assets/11779cef-bf0a-4076-ad30-a48498c73705" />
 
 
 
@@ -29,6 +30,7 @@ Performance: The CNN achieved a Test Loss of 0.1375 and a Test Accuracy of 0.948
 Confusion Matrix: The confusion matrix indicated that the CNN model made only a few misclassifications, demonstrating good predictive capabilities.
 
 **Explainable AI**
+<img width="1146" height="701" alt="image" src="https://github.com/user-attachments/assets/f124819c-b945-4f2f-9139-f73a25fb134f" />
 
 
 To provide a more comprehensive understanding of your CNN model's predictions, I will apply SHAP (SHapley Additive exPlanations). SHAP is a powerful method that explains the contribution of each feature to a prediction. This will help us understand which features are most important for the CNN's output, both globally and for individual predictions.

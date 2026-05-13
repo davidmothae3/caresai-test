@@ -32,6 +32,7 @@ Confusion Matrix: The confusion matrix indicated that the CNN model made only a 
 
 
 To provide a more comprehensive understanding of your CNN model's predictions, I will apply SHAP (SHapley Additive exPlanations). SHAP is a powerful method that explains the contribution of each feature to a prediction. This will help us understand which features are most important for the CNN's output, both globally and for individual predictions.
+<img width="779" height="859" alt="SHAP" src="https://github.com/user-attachments/assets/b5320e0b-760b-449b-aef6-60442f020958" />
 
 
 **VALIDATION**

@@ -87,6 +87,7 @@ These results demonstrate that the CNN model is robust and generalizes well to u
 <img width="690" height="307" alt="image" src="https://github.com/user-attachments/assets/a0dbf4d5-f3f1-4933-a012-99cf8fac99c8" />
 <img width="768" height="627" alt="image" src="https://github.com/user-attachments/assets/3292394b-cd57-47e5-848a-c000885a68e1" />
 
+<img width="1048" height="592" alt="image" src="https://github.com/user-attachments/assets/4090f432-3f7e-4434-809a-998c029e097c" />
 
 
 This report provides a detailed breakdown of the model's performance for each risk_level class (0, 1, 2, corresponding to Low, Medium, High Risk) and overall averages. Here's what each metric means:

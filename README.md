@@ -125,3 +125,46 @@ Weighted Avg Precision: 0.95
 Weighted Avg Recall: 0.95
 Weighted Avg F1-Score: 0.95
 In summary, the Random Forest model shows strong performance, particularly for the 'Medium Risk' class, with high precision and recall. Performance for 'Low Risk' and 'High Risk' is also very good, indicating the model generalizes well to unseen data across all risk categories.
+
+
+**COMPARING THE CNN TO RF**
+
+Let's compare the performance metrics of the Random Forest and CNN models based on their classification reports.
+
+Overall Accuracy:
+
+Random Forest: Achieved an accuracy of 0.95 (95%).
+CNN: Achieved an accuracy of 0.92 (92%).
+Precision, Recall, and F1-score by Class:
+
+Class 0 (Low Risk):
+
+Random Forest: Precision: 0.89, Recall: 0.94, F1-score: 0.92
+CNN: Precision: 0.87, Recall: 0.87, F1-score: 0.87
+Comparison: Random Forest shows slightly better precision and recall for 'Low Risk' cases.
+Class 1 (Medium Risk):
+
+Random Forest: Precision: 0.97, Recall: 0.96, F1-score: 0.96
+CNN: Precision: 0.96, Recall: 0.92, F1-score: 0.94
+Comparison: Random Forest has a marginal edge in precision and recall for 'Medium Risk', though both models perform exceptionally well here.
+Class 2 (High Risk):
+
+Random Forest: Precision: 0.88, Recall: 0.86, F1-score: 0.87
+CNN: Precision: 0.74, Recall: 0.96, F1-score: 0.83
+Comparison: This is where the models show the most significant difference.
+The Random Forest has a higher precision for 'High Risk' (0.88 vs 0.74), meaning when it predicts 'High Risk', it's more often correct than the CNN.
+The CNN has a notably higher recall for 'High Risk' (0.96 vs 0.86), indicating it is much better at identifying all actual 'High Risk' instances, even if it sometimes misclassifies other risks as high (leading to lower precision).
+Macro Average F1-Score (unweighted average across classes):
+
+Random Forest: 0.92
+CNN: 0.88
+Weighted Average F1-Score (weighted by support for each class):
+
+Random Forest: 0.95
+CNN: 0.92
+Summary and Conclusion:
+
+Random Forest generally exhibits slightly superior overall performance, as evidenced by its higher accuracy (95% vs 92%) and weighted average F1-score (0.95 vs 0.92). It maintains a strong balance between precision and recall across all classes.
+The CNN model shows a unique strength in its recall for 'High Risk' (0.96), suggesting it is highly effective at identifying the majority of actual high-risk situations. However, this comes at the cost of lower precision for this class, meaning it tends to have more false positives for 'High Risk' predictions.
+Depending on the specific priorities of the application (e.g., minimizing false negatives for high-risk situations vs. minimizing false positives), one model might be preferred over the other. If identifying all high-risk cases is paramount, even if it means some false alarms, the CNN's high recall for 'High Risk' is a significant advantage. If overall accuracy and balanced performance across all metrics are more critical, the Random Forest model appears to be the stronger choice.
+

@@ -84,6 +84,11 @@ These results demonstrate that the CNN model is robust and generalizes well to u
 
 **RESULTS Random Forest**
 
+<img width="690" height="307" alt="image" src="https://github.com/user-attachments/assets/a0dbf4d5-f3f1-4933-a012-99cf8fac99c8" />
+<img width="768" height="627" alt="image" src="https://github.com/user-attachments/assets/3292394b-cd57-47e5-848a-c000885a68e1" />
+
+
+
 This report provides a detailed breakdown of the model's performance for each risk_level class (0, 1, 2, corresponding to Low, Medium, High Risk) and overall averages. Here's what each metric means:
 
 Precision: For each class, precision measures the proportion of correctly predicted positive observations to the total predicted positive observations. A high precision means a low false positive rate.

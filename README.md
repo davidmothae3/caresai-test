@@ -29,6 +29,40 @@ Convolutional Neural Network (CNN) for Tabular Data (Target: risk_level): Most r
 Performance: The CNN achieved a Test Loss of 0.1375 and a Test Accuracy of 0.9484. The classification report showed strong performance, with high precision, recall, and f1-scores for the different risk_level classes (e.g., 0.97 f1-score for class 1).
 Confusion Matrix: The confusion matrix indicated that the CNN model made only a few misclassifications, demonstrating good predictive capabilities.
 
+
+Let's break down the Classification Report for the CNN model, focusing on how well it performs for each risk level:
+
+Precision: This metric tells us, for each class, out of all the instances the model predicted as that class, how many were actually correct.
+
+Class 0 (Low Risk): 0.87 - When the CNN predicts 'Low Risk', it is correct 87% of the time.
+Class 1 (Medium Risk): 0.96 - When the CNN predicts 'Medium Risk', it is correct 96% of the time. This is very high, indicating few false positives for medium risk.
+Class 2 (High Risk): 0.74 - When the CNN predicts 'High Risk', it is correct 74% of the time. This is lower than the other classes, suggesting the model sometimes misclassifies other risks as high risk.
+Recall: This metric tells us, for each actual class, out of all the instances that truly belong to that class, how many did the model correctly identify.
+
+Class 0 (Low Risk): 0.87 - The CNN correctly identifies 87% of all actual 'Low Risk' instances.
+Class 1 (Medium Risk): 0.92 - The CNN correctly identifies 92% of all actual 'Medium Risk' instances.
+Class 2 (High Risk): 0.96 - The CNN correctly identifies 96% of all actual 'High Risk' instances. This is a very strong recall, meaning the model is excellent at catching actual high-risk cases, even if it sometimes mislabels other cases as high risk (as seen in the lower precision).
+F1-Score: The F1-Score is a balanced measure, the harmonic mean of precision and recall. It's especially useful when classes are imbalanced (which we addressed with SMOTE).
+
+Class 0 (Low Risk): 0.87
+Class 1 (Medium Risk): 0.94
+Class 2 (High Risk): 0.83
+Support: This is the actual number of occurrences of each class in your test dataset.
+
+Class 0 (Low Risk): 140
+Class 1 (Medium Risk): 596
+Class 2 (High Risk): 78
+Accuracy: This is the overall proportion of correct predictions across all classes. The CNN achieved an overall accuracy of 0.92 (92%) on the test set.
+
+Macro Avg: This is the average of precision, recall, and F1-score across all classes, treating each class equally. It gives an idea of the model's performance on a per-class basis, without considering class imbalance. For the CNN, the Macro Avg F1-Score is 0.88.
+
+Weighted Avg: This is the average of precision, recall, and F1-score, weighted by the number of instances in each class (support). This reflects the overall performance more accurately when classes are imbalanced.
+
+The Weighted Avg F1-Score for the CNN is 0.92.
+In summary, the CNN model demonstrates strong overall performance with 92% accuracy. It excels at identifying actual 'High Risk' cases (high recall for class 2) but has some room for improvement in its precision for that class. For 'Medium Risk', it shows consistently high performance across all metrics. The 'Low Risk' class also performs well, indicating a robust model overall.
+
+
+
 **Explainable AI**
 <img width="1146" height="701" alt="image" src="https://github.com/user-attachments/assets/f124819c-b945-4f2f-9139-f73a25fb134f" />
 

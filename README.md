@@ -142,6 +142,8 @@ Class 0 (Low Risk):
 Random Forest: Precision: 0.89, Recall: 0.94, F1-score: 0.92
 CNN: Precision: 0.87, Recall: 0.87, F1-score: 0.87
 Comparison: Random Forest shows slightly better precision and recall for 'Low Risk' cases.
+
+
 Class 1 (Medium Risk):
 
 Random Forest: Precision: 0.97, Recall: 0.96, F1-score: 0.96

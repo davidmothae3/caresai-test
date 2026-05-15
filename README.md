@@ -149,6 +149,8 @@ Class 1 (Medium Risk):
 Random Forest: Precision: 0.97, Recall: 0.96, F1-score: 0.96
 CNN: Precision: 0.96, Recall: 0.92, F1-score: 0.94
 Comparison: Random Forest has a marginal edge in precision and recall for 'Medium Risk', though both models perform exceptionally well here.
+
+
 Class 2 (High Risk):
 
 Random Forest: Precision: 0.88, Recall: 0.86, F1-score: 0.87

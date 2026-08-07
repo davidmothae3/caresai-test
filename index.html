@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -97,6 +98,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .fclust.health{background:#CC2200;}
 .fclust.school{background:#0077CC;}
 .view-switch{display:flex;gap:3px;}
+.council-breadcrumb{display:none;position:absolute;top:10px;left:10px;z-index:600;background:var(--navy);color:#fff;padding:6px 10px;border-radius:7px;font-size:11px;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.council-breadcrumb button{background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:var(--font);}
+.council-breadcrumb button:hover{background:rgba(255,255,255,0.25);}
 .vs-btn{font-size:9px;padding:3px 7px;border-radius:4px;border:1px solid var(--bd);background:#fff;color:var(--text3);cursor:pointer;font-family:var(--font);}
 .vs-btn.vs-active{background:var(--navy);color:#fff;border-color:var(--navy);}
 .map-badge span{color:var(--navy);font-weight:600;}
@@ -3390,13 +3394,20 @@ function initMap(){
         {sticky: !isMobile}
       );
       marker.on('click', () => {
-        openDist(distName);
-        if (isMobile) {
-          setTimeout(() => {
-            const idx = CD.districts[distName].communities.findIndex(cm => cm.name === c.name);
-            if (idx >= 0 && typeof toggleBSComm === 'function') toggleBSComm(idx, distName);
-          }, 350);
-        }
+        const alreadyOpen = selDist === distName;
+        if (!alreadyOpen) openDist(distName);
+        setTimeout(() => {
+          const idx = CD.districts[distName].communities.findIndex(cm => cm.name === c.name);
+          if (idx < 0) return;
+          if (isMobile && typeof toggleBSComm === 'function') {
+            toggleBSComm(idx, distName);
+          } else if (typeof toggleC === 'function') {
+            const row = document.getElementById(`cr${idx}`);
+            if (row) row.scrollIntoView({block:'center', behavior:'smooth'});
+            const isOpen = document.getElementById(`cd${idx}`)?.classList.contains('open');
+            if (!isOpen) toggleC(idx, distName);
+          }
+        }, alreadyOpen ? 0 : 350);
       });
       marker._districtName = distName;
       communityLayer.addLayer(marker);
@@ -3458,6 +3469,17 @@ function toggleFacilityType(kind){
   }
 }
 
+let selectedCouncil = null;
+
+function pointInCouncil(lat, lng, council){
+  const pt = turf.point([lng, lat]);
+  return council.rings.some(ring => {
+    const closed = ring[0][0]===ring[ring.length-1][0] && ring[0][1]===ring[ring.length-1][1] ? ring : [...ring, ring[0]];
+    const poly = turf.polygon([closed.map(p => [p[1], p[0]])]); // turf wants [lng,lat]
+    try { return turf.booleanPointInPolygon(pt, poly); } catch(e){ return false; }
+  });
+}
+
 function buildCouncilLayer(distName){
   if (councilLayer) { lmap.removeLayer(councilLayer); councilLayer = null; }
   councilLayer = L.layerGroup();
@@ -3471,17 +3493,76 @@ function buildCouncilLayer(distName){
         dashArray: '4,3'
       });
       poly.bindTooltip(
-        `<strong>${c.name}</strong> Community Council<br><em style="color:#888;font-size:10px">GIS reference — no risk data linked yet</em>`,
+        `<strong>${c.name}</strong> Community Council<br><em style="color:#888;font-size:10px">Click to drill in</em>`,
         {sticky:true}
       );
+      poly.on('click', () => selectCouncil(c, poly, distName));
+      poly._councilData = c;
       councilLayer.addLayer(poly);
     });
   });
   return councilLayer;
 }
 
+function selectCouncil(council, polyLayer, distName){
+  selectedCouncil = council;
+  lmap.fitBounds(polyLayer.getBounds(), {padding:[20,20]});
+  councilLayer.eachLayer(p => {
+    const isSel = p._councilData && p._councilData.code === council.code;
+    p.setStyle({
+      fillOpacity: isSel ? 0.12 : 0.25,
+      weight: isSel ? 2.5 : 1.5,
+      color: isSel ? '#003366' : '#666688',
+      opacity: isSel ? 1 : 0.3
+    });
+  });
+  // Filter community dots to those spatially within this council (computed at runtime, no data join needed)
+  if (communityLayer) {
+    communityLayer.eachLayer(m => {
+      const inCouncil = m._districtName === distName && pointInCouncil(m.getLatLng().lat, m.getLatLng().lng, council);
+      m.setStyle({opacity: inCouncil?1:0, fillOpacity: inCouncil?(m.options.dashArray?0.55:0.9):0});
+    });
+    if (!lmap.hasLayer(communityLayer)) communityLayer.addTo(lmap);
+  }
+  renderCouncilBreadcrumb(council, distName);
+}
+
+function renderCouncilBreadcrumb(council, distName){
+  let bc = document.getElementById('council-breadcrumb');
+  if (!bc) {
+    bc = document.createElement('div');
+    bc.id = 'council-breadcrumb';
+    bc.className = 'council-breadcrumb';
+    document.querySelector('.map-wrap').appendChild(bc);
+  }
+  bc.innerHTML = `<span>${distName} → <strong>${council.name}</strong></span><button onclick="exitCouncilDrilldown('${distName}')">✕ Exit</button>`;
+  bc.style.display = 'flex';
+}
+
+function exitCouncilDrilldown(distName){
+  selectedCouncil = null;
+  const bc = document.getElementById('council-breadcrumb');
+  if (bc) bc.style.display = 'none';
+  councilLayer.eachLayer(p => p.setStyle({fillOpacity:0.25, weight:1.5, color:'#666688', opacity:1}));
+  if (communityLayer) {
+    communityLayer.eachLayer(m => {
+      const show = m._districtName === distName;
+      m.setStyle({opacity: show?1:0, fillOpacity: show?(m.options.dashArray?0.55:0.9):0});
+    });
+  }
+  const district = CD.districts[distName];
+  if (gjLayer) {
+    gjLayer.eachLayer(layer => {
+      if (layer.feature && layer.feature.properties.name === distName) lmap.fitBounds(layer.getBounds(),{padding:[30,30]});
+    });
+  }
+}
+
 function switchMapView(mode, distName){
   mapViewMode = mode;
+  selectedCouncil = null;
+  const bc = document.getElementById('council-breadcrumb');
+  if (bc) bc.style.display = 'none';
   const note = document.getElementById('council-note');
   if (note) note.style.display = mode === 'councils' ? 'block' : 'none';
   document.querySelectorAll('.vs-btn').forEach(b => b.classList.remove('vs-active'));
@@ -3489,11 +3570,15 @@ function switchMapView(mode, distName){
   if (activeBtn) activeBtn.classList.add('vs-active');
 
   if (mode === 'councils') {
-    // Hide community dots, show council polygons
-    if (communityLayer) communityLayer.eachLayer(m => m.setStyle({opacity:0, fillOpacity:0}));
     lmap.addLayer(buildCouncilLayer(distName));
+    if (communityLayer) {
+      communityLayer.eachLayer(m => {
+        const show = m._districtName === distName;
+        m.setStyle({opacity: show?1:0, fillOpacity: show?(m.options.dashArray?0.55:0.9):0});
+      });
+      if (!lmap.hasLayer(communityLayer)) communityLayer.addTo(lmap);
+    }
   } else {
-    // Hide council polygons, restore community dots
     if (councilLayer) { lmap.removeLayer(councilLayer); }
     if (communityLayer) {
       communityLayer.eachLayer(m => {
@@ -3513,6 +3598,8 @@ function distStyle(name){
 function openDist(name){
   selDist=name;
   mapViewMode='communities'; // reset to default view on every district change
+  selectedCouncil=null;
+  const _bc=document.getElementById('council-breadcrumb'); if(_bc) _bc.style.display='none';
   if (councilLayer) { lmap.removeLayer(councilLayer); councilLayer=null; }
   // Highlight list
   document.querySelectorAll('.dc').forEach(c=>c.classList.remove('active'));
@@ -3634,6 +3721,8 @@ function buildDetailPanel(name){
 function backToOverview(){
   selDist=null;
   mapViewMode='communities';
+  selectedCouncil=null;
+  const _bc2=document.getElementById('council-breadcrumb'); if(_bc2) _bc2.style.display='none';
   if(gjLayer) gjLayer.eachLayer(l=>gjLayer.resetStyle(l));
   if (communityLayer && lmap.hasLayer(communityLayer)) lmap.removeLayer(communityLayer);
   if (councilLayer) { lmap.removeLayer(councilLayer); councilLayer=null; }
@@ -3641,6 +3730,15 @@ function backToOverview(){
   const rp=document.getElementById('right-panel');
   rp.innerHTML=`<div class="no-sel"><div style="font-size:28px;opacity:0.25">⬡</div><div style="font-size:13px;font-weight:600;color:var(--text2)">Select a District</div><div style="font-size:11px;">Click any district on the map or list to view detail.</div></div>`;
   document.querySelectorAll('.dc').forEach(c=>c.classList.remove('active'));
+}
+
+function communityDrivers(c){
+  return[
+    {n:'Diarrhoeal Disease Rate',c:Math.min(100,c.diarrhoea_rate/3)*0.35,l:`${c.diarrhoea_rate.toFixed(0)}/1000`},
+    {n:'ARI Disease Rate',c:Math.min(100,c.ari_rate/4)*0.25,l:`${c.ari_rate.toFixed(0)}/1000`},
+    {n:'Rainfall Intensity',c:Math.min(100,c.rainfall/1.5)*0.20,l:`${c.rainfall.toFixed(0)}mm`},
+    {n:'WASH Vulnerability',c:(100-c.safe_water)*0.6*0.15,l:`${c.safe_water.toFixed(0)}% safe water`}
+  ].sort((a,b)=>b.c-a.c).slice(0,2);
 }
 
 function toggleC(idx,distName){
@@ -3653,6 +3751,9 @@ function toggleC(idx,distName){
   row.classList.add('open'); det.classList.add('open');
   const c=CD.districts[distName].communities[idx];
   const flags=eflags(c.name);
+  const drvs=communityDrivers(c);
+  const mx=drvs[0].c||1;
+  const col=C(c.risk_level);
   det.innerHTML=`
     <div class="cmgrid">
       <div class="cmb"><div class="cml">Diarrhoea</div><div class="cmv" style="color:${c.diarrhoea_rate>400?HIGH:c.diarrhoea_rate>250?MED:LOW}">${c.diarrhoea_rate.toFixed(0)}</div></div>
@@ -3661,6 +3762,16 @@ function toggleC(idx,distName){
       <div class="cmb"><div class="cml">Safe Water</div><div class="cmv" style="color:${c.safe_water<75?HIGH:c.safe_water<85?MED:LOW}">${c.safe_water.toFixed(0)}%</div></div>
       <div class="cmb"><div class="cml">Temp</div><div class="cmv">${c.temp.toFixed(1)}°C</div></div>
       <div class="cmb"><div class="cml">U5 Pop</div><div class="cmv">${c.u5_pop.toLocaleString()}</div></div>
+    </div>
+    <div style="font-size:9px;font-weight:600;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;margin:8px 0 4px;">Top Drivers</div>
+    ${drvs.map((dr,i)=>`
+      <div style="padding:6px 8px;background:#fff;border:1px solid var(--bd);border-radius:4px;margin-bottom:3px;">
+        <div style="font-size:9px;color:var(--text3);">${dr.l}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text);">${dr.n}</div>
+        <div style="height:2px;background:var(--bd);border-radius:2px;margin-top:3px;"><div style="height:100%;width:${(dr.c/mx*100).toFixed(0)}%;background:${i===0?col:'var(--blue)'};border-radius:2px;"></div></div>
+      </div>`).join('')}
+    <div style="padding:7px 9px;border-radius:5px;font-size:10px;line-height:1.5;margin:6px 0;background:${c.risk_level==='High'?'var(--high-bg)':c.risk_level==='Medium'?'var(--med-bg)':'var(--low-bg)'};border:1px solid ${col}33;">
+      <span style="font-weight:700;text-transform:uppercase;color:${col};">${c.risk_level} Risk: </span>${action(c.risk_level)}
     </div>
     <div style="font-size:9px;font-weight:600;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;">🏴 Environmental Risk Flags</div>
     ${flags.map(f=>`<div class="eflag ${f.t}"><span style="font-size:12px;flex-shrink:0">${f.i}</span><span>${f.x}</span></div>`).join('')}

@@ -3355,7 +3355,7 @@ function buildList(){
 
 function initMap(){
   lmap=L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([-29.5,28.3],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'',maxZoom:19}).addTo(lmap);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(lmap);
   gjLayer=L.geoJSON(GEO,{
     style:f=>distStyle(f.properties.name),
     onEachFeature:(f,layer)=>{

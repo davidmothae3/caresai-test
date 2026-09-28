@@ -1,186 +1,160 @@
-**INTRODUCTION OF THE PROJECT**
+# CARES — Climate Anticipatory Risk and Early Warning System
 
-**CARES: Climate Adaptive Resilience and Early Warning System for Child Health**
+**Open-source anticipatory intelligence for child health risk in Lesotho.**
 
-TitaniumX Group | Mohloli Innovation Hub
+Built by TitaniumX Group (Pty) Ltd through the Mohloli Digital and Innovation Hub (MDI Hub), Maseru, Lesotho.
 
-Children across Lesotho face a growing convergence of climate sensitive health threats, including diarrhoeal disease, acute respiratory infections, hypothermia, and severe acute malnutrition. These risks are shaped not only by poverty and access to services, but also by climate variability and environmental vulnerability. Rainfall anomalies, drought conditions, temperature drops, flooding, and snow related road disruption can all affect whether vulnerable children receive timely care and essential services. Yet very few climate and health platforms have been designed from within Lesotho to anticipate these risks before they escalate.
+Live dashboard: https://davidmothae3.github.io/caresai-test/ · Code licence: MIT
 
-CARES is an open source, AI powered anticipatory intelligence platform (CARE-AI) designed to answer one operational question: given current and forecast climate conditions, what child health risks are likely to emerge in the next two to four weeks, where will they occur, and what action should be taken before impacts escalate?
+---
 
-Built on a modular architecture designed for DHIS2 integration, CARES combines climate data, child health indicators, geospatial analysis, machine learning, and explainable AI to generate district risk classifications, preparedness alerts, and decision support outputs. Its predictive engine, CARE AI, uses classification models to identify elevated risk districts before disease burden increases. Risk intelligence is presented through an interactive dashboard and a planned community alert layer, RiSe, intended for future use by community health workers and local response systems.
+## 1. What CARES is
 
-CARES has progressed beyond concept stage into a functioning prototype developed in Lesotho by TitaniumX Group. The prototype uses notional and DHS anchored data to demonstrate predictive feasibility, model explainability, district risk mapping, and dashboard based alert generation. It does not use individual child records and should not be interpreted as a validated clinical or epidemiological prediction system.
+CARES combines climate, child-health and geographic indicators to classify district and community risk (Low / Medium / High) across Lesotho's 10 districts and 113 communities, explains each classification, and suggests a preparedness action. The intended use is anticipatory action: district health teams see where risk is rising, why, and what to do before disease burden escalates. Its prediction engine is called CARE-AI.
 
-As the flagship platform of the Mohloli innovation ecosystem, CARES represents an Africa built digital public infrastructure concept grounded in local disease burden, local data realities, and local ownership. It is designed to support future government integration, open source collaboration, phased national scale up, and adaptation to other climate vulnerable settings.
+**Status.** CARES is a functioning prototype. It runs on a notional, DHS-anchored dataset. It contains no individual child records, is not connected to DHIS2 or any live health system, and is not a validated clinical or epidemiological tool. Results demonstrate technical feasibility only (see [Limitations](#9-limitations)).
 
+## 2. Repository contents
 
+| File | Purpose |
+|---|---|
+| `CARES.csv` | Notional, DHS-anchored dataset: 4,068 rows × 29 columns (see [schema](#4-data-schema)) |
+| `Climate_Health_Risk_Kids_Under_5.ipynb` | Google Colab notebook: preprocessing, SMOTE, Random Forest, 1D-CNN, SHAP, cross-validation |
+| `care_ai_output.json` | Model output consumed by the dashboard (district scores, community records, confidence, monthly trends) |
+| `index.html` | Single-file dashboard (Leaflet, Chart.js). Also embeds GIS reference layers |
+| `LICENSE` | MIT licence, © 2026 TitaniumX Group (Pty) Ltd |
+| `.github/redeploy-trigger.txt` | Used to trigger a GitHub Pages redeploy; no runtime function |
 
-**RESULTS Convolution Neural Networks** 
+## 3. Pipeline
 
-We have implementes a Convolutional Neural Network (CNN) and a Random Forest on our dataset. Since our data is tabular, we adapted it by reshaping the features to be suitable for a 1D CNN. We'll use the risk_level as the target variable for this classification task. After defining and training the model, I'll evaluate its performance with a classification report and a confusion matrix.
+```
+CARES.csv → notebook (preprocess → SMOTE → Random Forest + 1D-CNN → SHAP) → care_ai_output.json → index.html (dashboard)
+```
 
-The CNN model for predicting risk_level has been trained and evaluated.
+1. **Data.** `CARES.csv` holds one row per community per month, 2022–2024.
+2. **Modelling.** The notebook encodes and cleans the data, splits it 80/20, balances the training set with SMOTE, and trains a Random Forest and a 1D-CNN to classify `risk_level`. SHAP explains the CNN's predictions.
+3. **Export.** `care_ai_output.json` contains model metadata, district scores, community records, confidence values and monthly trends. The file in this repository is a committed export of the model output (generated 2026-05-16). A final notebook cell that regenerates it from the trained model is being added; until it is committed, the JSON is not produced by a notebook cell.
+4. **Dashboard.** `index.html` fetches `care_ai_output.json` on load. If the file cannot be loaded, it falls back to an embedded notional dataset.
 
-Here are the performance metrics:
+## 4. Data schema
 
-<img width="735" height="393" alt="image" src="https://github.com/user-attachments/assets/d39379d1-de63-45c3-a7f3-d18408e097c4" />
+### `CARES.csv` (4,068 rows × 29 columns)
 
-<img width="610" height="547" alt="image" src="https://github.com/user-attachments/assets/11779cef-bf0a-4076-ad30-a48498c73705" />
+One row per community per month: 113 communities (96 distinct names; some placeholder names repeat across districts) × 36 months (2022–2024), across 10 districts.
 
+| Group | Columns |
+|---|---|
+| Identifiers | `year`, `month`, `district`, `community`, `record_type` |
+| Context | `elevation_zone`, `highland`, `mean_altitude_m`, `urban_pct`, `u5_population` |
+| Climate | `rainfall_mm`, `temperature_min_c`, `temperature_max_c`, `temperature_mean_c`, `frost_days`, `spi_drought_index`, `snow_access_risk` |
+| Child health | `diarrhoea_rate_per1000`, `diarrhoea_cases_u5`, `ari_rate_per1000`, `ari_cases_u5`, `sam_rate_per1000`, `sam_cases_u5` |
+| Water, sanitation, nutrition | `safe_water_pct`, `improved_sanit_pct`, `stunting_pct_dhs`, `wasting_pct_dhs` |
+| Labels | `risk_score`, `risk_level` (Low < 45, Medium 45–69.9, High ≥ 70) |
 
+**Model inputs (17):** `rainfall_mm`, `temperature_mean_c`, `frost_days`, `spi_drought_index`, `snow_access_risk`, the six child-health columns, `safe_water_pct`, `improved_sanit_pct`, `stunting_pct_dhs`, `wasting_pct_dhs`, `mean_altitude_m`, `urban_pct`. The target is `risk_level`. `risk_score` is excluded from the inputs to prevent label leakage.
 
-The model demonstrates strong performance, especially for risk_level 1, with a high overall accuracy. The confusion matrix also provides a visual representation of the model's predictions versus the actual values.
+### `care_ai_output.json`
 
-We've made significant progress in analyzing your dataset and building predictive models. Here's a summary of what we've accomplished:
+| Level | Fields |
+|---|---|
+| Top level | `generated_at`, `model_version`, `model_architecture`, `rf_accuracy`, `cnn_accuracy`, `cnn_high_risk_recall`, `cross_validation_mean`, `data_source`, `districts`, `trends` |
+| `districts[name]` | `district`, `risk_score`, `risk_level`, `confidence`, `diarrhoea_rate`, `ari_rate`, `rainfall`, `safe_water`, `temp`, `highland`, `u5_population`, `lat`, `lng`, `communities` |
+| `communities[]` | `name`, `risk_score`, `risk_level`, `diarrhoea_rate`, `ari_rate`, `rainfall`, `safe_water`, `temp`, `highland`, `u5_pop` |
+| `trends[name]` | Monthly risk-score series (12 values) |
 
-Data Preprocessing and Cleaning: We started by importing your CARES.csv dataset, handling missing values, and encoding categorical features like elevation_zone, highland, and risk_level into numerical representations. We also dropped non-numerical and non-contributing columns (year, month, district, community, record_type, u5_population, temperature_min_c, temperature_max_c).
+## 5. Models and results
 
-Convolutional Neural Network (CNN) for Tabular Data (Target: risk_level): Most recently, we implemented and evaluated a 1D CNN model.
+Random 80/20 split (`random_state=42`): 3,254 training rows and 814 test rows (test support: Low 140, Medium 596, High 78). SMOTE is applied to the training set only (3,254 → 6,897 rows). The CNN is a 1D convolutional network over the 17 inputs reshaped to (17, 1).
 
-Performance: The CNN achieved a Test Loss of 0.1375 and a Test Accuracy of 0.9484. The classification report showed strong performance, with high precision, recall, and f1-scores for the different risk_level classes (e.g., 0.97 f1-score for class 1).
-Confusion Matrix: The confusion matrix indicated that the CNN model made only a few misclassifications, demonstrating good predictive capabilities.
+| Metric | Random Forest | CNN |
+|---|---|---|
+| Test accuracy | 95% | 92% |
+| High-Risk recall | 86% | 96% |
+| High-Risk precision | 88% | 74% |
+| Weighted F1 | 0.95 | 0.92 |
+| 5-fold cross-validation, mean accuracy | — | 94.6% |
 
+Per-class precision / recall on the test set:
 
-Let's break down the Classification Report for the CNN model, focusing on how well it performs for each risk level:
+| Class | Random Forest | CNN |
+|---|---|---|
+| Low | 0.89 / 0.94 | 0.87 / 0.87 |
+| Medium | 0.97 / 0.96 | 0.96 / 0.92 |
+| High | 0.88 / 0.86 | 0.74 / 0.96 |
 
-Precision: This metric tells us, for each class, out of all the instances the model predicted as that class, how many were actually correct.
+**Note on figures.** The 94.6% cross-validation figure is the CNN result printed by the committed notebook and stored in `care_ai_output.json`. Earlier documents, including our proposal, quote 96.9% ± 0.74% from an earlier run of the same 5-fold procedure. This README reports the committed notebook output.
 
-Class 0 (Low Risk): 0.87 - When the CNN predicts 'Low Risk', it is correct 87% of the time.
-Class 1 (Medium Risk): 0.96 - When the CNN predicts 'Medium Risk', it is correct 96% of the time. This is very high, indicating few false positives for medium risk.
-Class 2 (High Risk): 0.74 - When the CNN predicts 'High Risk', it is correct 74% of the time. This is lower than the other classes, suggesting the model sometimes misclassifies other risks as high risk.
-Recall: This metric tells us, for each actual class, out of all the instances that truly belong to that class, how many did the model correctly identify.
+**Explainability.** SHAP explains the CNN's predictions (global and per-prediction). Feature-importance analysis is applied to the Random Forest. The dashboard shows the top drivers behind each district's score.
 
-Class 0 (Low Risk): 0.87 - The CNN correctly identifies 87% of all actual 'Low Risk' instances.
-Class 1 (Medium Risk): 0.92 - The CNN correctly identifies 92% of all actual 'Medium Risk' instances.
-Class 2 (High Risk): 0.96 - The CNN correctly identifies 96% of all actual 'High Risk' instances. This is a very strong recall, meaning the model is excellent at catching actual high-risk cases, even if it sometimes mislabels other cases as high risk (as seen in the lower precision).
-F1-Score: The F1-Score is a balanced measure, the harmonic mean of precision and recall. It's especially useful when classes are imbalanced (which we addressed with SMOTE).
+## 6. Dashboard
 
-Class 0 (Low Risk): 0.87
-Class 1 (Medium Risk): 0.94
-Class 2 (High Risk): 0.83
-Support: This is the actual number of occurrences of each class in your test dataset.
+`index.html` provides three views:
 
-Class 0 (Low Risk): 140
-Class 1 (Medium Risk): 596
-Class 2 (High Risk): 78
-Accuracy: This is the overall proportion of correct predictions across all classes. The CNN achieved an overall accuracy of 0.92 (92%) on the test set.
+- **District Risk Map:** risk by district and community, drill-down panels with metrics, top drivers and recommended action, and a district rainfall forecast panel.
+- **Trend Analysis:** 2024 monthly risk-score trends by district, with High (≥ 70) and Medium (≥ 45) reference lines.
+- **Alert Feed:** districts ranked by risk score with top drivers and forecast rainfall. Alert times shown in the feed ("4m ago" and similar) are illustrative in the prototype; there is no live alerting yet.
 
-Macro Avg: This is the average of precision, recall, and F1-score across all classes, treating each class equally. It gives an idea of the model's performance on a per-class basis, without considering class imbalance. For the CNN, the Macro Avg F1-Score is 0.88.
+Map layers:
 
-Weighted Avg: This is the average of precision, recall, and F1-score, weighted by the number of instances in each class (support). This reflects the overall performance more accurately when classes are imbalanced.
+- 113 community markers, coloured by risk. Some markers use approximate positions and are drawn with dashed outlines.
+- 202 health facilities and 2,393 schools (official Lesotho datasets), toggled independently and clustered.
+- 78 Community Council boundaries (FAO/MLGCA 2019) as a GIS reference layer, with click-to-filter drill-down. Council polygons are **not** linked to model risk scores.
 
-The Weighted Avg F1-Score for the CNN is 0.92.
-In summary, the CNN model demonstrates strong overall performance with 92% accuracy. It excels at identifying actual 'High Risk' cases (high recall for class 2) but has some room for improvement in its precision for that class. For 'Medium Risk', it shows consistently high performance across all metrics. The 'Low Risk' class also performs well, indicating a robust model overall.
+The forecast panel calls the OpenWeatherMap 5-day forecast for each district centroid and shows daily rainfall. It is independent of the risk model: the model does not use live weather.
 
+## 7. Running locally
 
+**Dashboard.** Serve the folder over HTTP (opening `index.html` directly from disk blocks the JSON request):
 
-**Explainable AI**
-<img width="1146" height="701" alt="image" src="https://github.com/user-attachments/assets/f124819c-b945-4f2f-9139-f73a25fb134f" />
+```bash
+python -m http.server 8000
+# open http://localhost:8000
+```
 
+**Notebook.** Open `Climate_Health_Risk_Kids_Under_5.ipynb` in Google Colab, upload `CARES.csv`, and run all cells. Dependencies:
 
-To provide a more comprehensive understanding of your CNN model's predictions, I will apply SHAP (SHapley Additive exPlanations). SHAP is a powerful method that explains the contribution of each feature to a prediction. This will help us understand which features are most important for the CNN's output, both globally and for individual predictions.
-<img width="779" height="859" alt="SHAP" src="https://github.com/user-attachments/assets/b5320e0b-760b-449b-aef6-60442f020958" />
+```bash
+pip install pandas numpy scikit-learn imbalanced-learn tensorflow shap eli5 xgboost matplotlib seaborn
+```
 
+## 8. Data, licence and governance
 
-**VALIDATION**
-To ensure the stability and robustness of our CNN model, I will now implement k-fold cross-validation. This will give us a more reliable estimate of its performance across different subsets of the training data.
+- **Code:** MIT licence (see `LICENSE`).
+- **Data in this repository:** `CARES.csv` is a notional dataset anchored to aggregate Lesotho DHS 2023–24 indicators. It contains aggregated community-month rows and no individual records.
+- **Protected data:** No Ministry of Health or DHIS2 data is stored in this repository. Real operational data will remain protected under a data-sharing agreement and will not be committed.
+- **GIS layers:** Facility, school and Community Council layers embedded in `index.html` derive from official Lesotho datasets and FAO/MLGCA (2019) boundaries and remain subject to their providers' terms. The MIT licence covers the code.
+- **Weather API:** The dashboard currently calls OpenWeatherMap directly from the browser with a free-tier key. This is a prototype trade-off; the call will move behind a server-side proxy.
 
-The cross-validation for the CNN model has completed successfully! Here are the results:
+## 9. Limitations
 
-Mean Validation Accuracy: This model achieved an average validation accuracy of 0.9690 (or 96.90%) across the 5 folds.
-Standard Deviation of Accuracy: The accuracy varied by +/- 0.0074, which suggests that the model is quite stable and its performance is consistent across different subsets of the data.
-Mean Validation Loss: The average validation loss was 0.0813.
-Standard Deviation of Loss: The loss varied by +/- 0.0111, also indicating good stability.
-These results demonstrate that the CNN model is robust and generalizes well to unseen data, as indicated by the high mean accuracy and low standard deviations for both accuracy and loss
+- **Notional data and synthetic labels.** `risk_score` and `risk_level` are labels defined in the notional dataset (a threshold on `risk_score`), not observed health outcomes.
+- **Classifies current risk.** Model inputs are same-month indicators and include disease rates, so the prototype classifies current risk. It is not yet a forecasting model. Lagged climate features for forecasting are planned.
+- **Optimistic validation.** Results come from a random train/test split and k-fold cross-validation on one notional dataset. Temporal hold-out and leave-one-district-out validation have not yet been run.
+- **Placeholder geography.** Some community names repeat across districts and some marker positions are approximate. Real boundaries will come with real data.
+- **Access risk not yet modelled.** Health-facility and school locations are mapped, and Community Council boundaries are shown for reference. A predictive road and school access-disruption model is not yet built.
+- **Live weather is display-only.** The forecast panel is not an input to the risk model.
+- **Alerts are illustrative.** The Alert Feed ranks districts from the exported scores and shows illustrative timestamps. SMS and other alert delivery are on the roadmap (Q4).
+- **Not a clinical tool.** Outputs support planning decisions and are not diagnostic.
 
-**RESULTS Random Forest**
+## 10. Roadmap
 
-<img width="690" height="307" alt="image" src="https://github.com/user-attachments/assets/a0dbf4d5-f3f1-4933-a012-99cf8fac99c8" />
-<img width="768" height="627" alt="image" src="https://github.com/user-attachments/assets/3292394b-cd57-47e5-848a-c000885a68e1" />
+| Quarter | Focus |
+|---|---|
+| Q1 | DHIS2 data-sharing agreement and connector; validation across all 10 districts; open-source documentation and replication toolkit; production hosting |
+| Q2 | ARI and hypothermia module, deployed to highland districts ahead of winter |
+| Q3 | Nutrition and food-security module (drought indicators, LVAC data); scoping of a multi-hazard module with the Disaster Management Authority |
+| Q4 | SMS alerts to community health workers; road and school access-disruption model; full Ministry of Health integration; replication toolkit for other countries |
 
-<img width="1048" height="592" alt="image" src="https://github.com/user-attachments/assets/4090f432-3f7e-4434-809a-998c029e097c" />
+## 11. Team and contributors
 
+| Name | Role |
+|---|---|
+| Akinyemi Atobatele | Program Lead / CEO |
+| Palo Moshoeshoe | Technical Architect / Lead AI |
+| Joel Nimarko | GIS Specialist |
+| David Mothae | Mohloli Digital and Innovation Hub Lead (dashboard and delivery) |
+| Thulo Monyatsi | DHIS2 integration and backend |
 
-This report provides a detailed breakdown of the model's performance for each risk_level class (0, 1, 2, corresponding to Low, Medium, High Risk) and overall averages. Here's what each metric means:
+Commit history appears under three GitHub accounts: `nongolosh` (Palo Moshoeshoe), and `davidmothae3` and `RudraDav3` (David Mothae).
 
-Precision: For each class, precision measures the proportion of correctly predicted positive observations to the total predicted positive observations. A high precision means a low false positive rate.
-
-Class 0 (Low Risk): 0.89 - When the model predicts 'Low Risk', it is correct 89% of the time.
-Class 1 (Medium Risk): 0.97 - When the model predicts 'Medium Risk', it is correct 97% of the time.
-Class 2 (High Risk): 0.88 - When the model predicts 'High Risk', it is correct 88% of the time.
-Recall: For each class, recall measures the proportion of correctly predicted positive observations to all observations in the actual class. A high recall means a low false negative rate.
-
-Class 0 (Low Risk): 0.94 - The model correctly identifies 94% of all actual 'Low Risk' instances.
-Class 1 (Medium Risk): 0.96 - The model correctly identifies 96% of all actual 'Medium Risk' instances.
-Class 2 (High Risk): 0.86 - The model correctly identifies 86% of all actual 'High Risk' instances.
-F1-Score: The F1-Score is the harmonic mean of precision and recall. It's a useful metric when you need to balance both precision and recall, especially in cases of uneven class distribution.
-
-Class 0 (Low Risk): 0.92
-Class 1 (Medium Risk): 0.96
-Class 2 (High Risk): 0.87
-Support: This is the number of actual occurrences of the class in the specified dataset (in this case, the test set).
-
-Class 0 (Low Risk): 140
-Class 1 (Medium Risk): 596
-Class 2 (High Risk): 78
-Accuracy: The proportion of total correct predictions across all classes. The overall accuracy of the Random Forest model is 0.95, meaning it correctly predicted the risk level for 95% of the test instances.
-
-Macro Avg: The average of precision, recall, and F1-score for all classes, treating all classes equally. It's useful when you want to see how the model performs on each class without being influenced by class imbalance.
-
-Macro Avg Precision: 0.91
-Macro Avg Recall: 0.92
-Macro Avg F1-Score: 0.92
-Weighted Avg: The average of precision, recall, and F1-score for all classes, weighted by the number of instances in each class. This is more representative of the overall performance when there is class imbalance.
-
-Weighted Avg Precision: 0.95
-Weighted Avg Recall: 0.95
-Weighted Avg F1-Score: 0.95
-In summary, the Random Forest model shows strong performance, particularly for the 'Medium Risk' class, with high precision and recall. Performance for 'Low Risk' and 'High Risk' is also very good, indicating the model generalizes well to unseen data across all risk categories.
-
-
-**COMPARING THE CNN TO RF**
-
-Let's compare the performance metrics of the Random Forest and CNN models based on their classification reports.
-
-Overall Accuracy:
-
-Random Forest: Achieved an accuracy of 0.95 (95%).
-CNN: Achieved an accuracy of 0.92 (92%).
-Precision, Recall, and F1-score by Class:
-
-Class 0 (Low Risk):
-
-Random Forest: Precision: 0.89, Recall: 0.94, F1-score: 0.92
-CNN: Precision: 0.87, Recall: 0.87, F1-score: 0.87
-Comparison: Random Forest shows slightly better precision and recall for 'Low Risk' cases.
-
-
-Class 1 (Medium Risk):
-
-Random Forest: Precision: 0.97, Recall: 0.96, F1-score: 0.96
-CNN: Precision: 0.96, Recall: 0.92, F1-score: 0.94
-Comparison: Random Forest has a marginal edge in precision and recall for 'Medium Risk', though both models perform exceptionally well here.
-
-
-Class 2 (High Risk):
-
-Random Forest: Precision: 0.88, Recall: 0.86, F1-score: 0.87
-CNN: Precision: 0.74, Recall: 0.96, F1-score: 0.83
-Comparison: This is where the models show the most significant difference.
-The Random Forest has a higher precision for 'High Risk' (0.88 vs 0.74), meaning when it predicts 'High Risk', it's more often correct than the CNN.
-The CNN has a notably higher recall for 'High Risk' (0.96 vs 0.86), indicating it is much better at identifying all actual 'High Risk' instances, even if it sometimes misclassifies other risks as high (leading to lower precision).
-Macro Average F1-Score (unweighted average across classes):
-
-Random Forest: 0.92
-CNN: 0.88
-Weighted Average F1-Score (weighted by support for each class):
-
-Random Forest: 0.95
-CNN: 0.92
-Summary and Conclusion:
-
-Random Forest generally exhibits slightly superior overall performance, as evidenced by its higher accuracy (95% vs 92%) and weighted average F1-score (0.95 vs 0.92). It maintains a strong balance between precision and recall across all classes.
-The CNN model shows a unique strength in its recall for 'High Risk' (0.96), suggesting it is highly effective at identifying the majority of actual high-risk situations. However, this comes at the cost of lower precision for this class, meaning it tends to have more false positives for 'High Risk' predictions.
-Depending on the specific priorities of the application (e.g., minimizing false negatives for high-risk situations vs. minimizing false positives), one model might be preferred over the other. If identifying all high-risk cases is paramount, even if it means some false alarms, the CNN's high recall for 'High Risk' is a significant advantage. If overall accuracy and balanced performance across all metrics are more critical, the Random Forest model appears to be the stronger choice.
-
+TitaniumX Group (Pty) Ltd · Maseru, Lesotho

@@ -1,6 +1,6 @@
 **INTRODUCTION OF THE PROJECT**
 
-**CARES: Climate Adaptive Resilience and Early Warning System for Child Health**
+**CARES: Climate Anticipatory Risk and Early Warning System**
 
 TitaniumX Group | Mohloli Innovation Hub
 

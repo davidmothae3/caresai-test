@@ -1,0 +1,114 @@
+community,district,orig_lat,orig_lng,orig_source,issues,action,new_source
+Teyateyaneng,Berea,-29.1519737,27.7427554,locationiq_geocoded,,kept,locationiq_geocoded
+Peka,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Roma,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Ha Thetsane,Berea,-29.219169336941693,27.628040034905514,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Kolonyama,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Nkau,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Makhoakhoeng,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Mapoteng,Berea,-29.1151228,27.9727417,locationiq_geocoded,,kept,locationiq_geocoded
+Thaba Bosiu,Berea,-29.2387262,27.950423,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Lejone,Berea,-29.2616686,27.9553449,locationiq_geocoded,,kept,locationiq_geocoded
+Morija,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Kolo,Berea,-29.193764,27.890664,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Ntsekhe,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Mafika-Lisiu,Butha-Buthe,-28.5791024,28.6524091,locationiq_geocoded,,kept,locationiq_geocoded
+Motete,Butha-Buthe,-28.8398671,28.7541156,locationiq_geocoded,,kept,locationiq_geocoded
+Khabo,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Bethlehem,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Fobane,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Hololo,Butha-Buthe,-28.7362116,28.4185338,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Makebe,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Butha-Buthe Town,Butha-Buthe,-28.767108,28.250247,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Nqosa,Butha-Buthe,-28.76519,28.56847,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Likila,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Phafane,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Tsikoane,Leribe,-28.9015463,27.9939164,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Mofoka,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Khabo,Leribe,-28.8527636,28.2696502,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Lejone,Leribe,-28.7734898,28.1079304,locationiq_geocoded,,kept,locationiq_geocoded
+Mokhele,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Thaba-Phatsoa,Leribe,-28.9967,28.1258,locationiq_geocoded,,kept,locationiq_geocoded
+Hlotse,Leribe,-28.8709874,28.0432208,locationiq_geocoded,,kept,locationiq_geocoded
+Mahobong,Leribe,-28.937707,28.1672072,locationiq_geocoded,,kept,locationiq_geocoded
+Ngoajane,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Maputsoe,Leribe,-29.3549666,28.5709226,locationiq_geocoded,,kept,locationiq_geocoded
+Pitseng,Leribe,-28.8704719,28.3821166,locationiq_geocoded,,kept,locationiq_geocoded
+Makhunoane,Leribe,-28.955803,28.28196,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Ha Polaki,Mafeteng,-29.909158,27.973286,locationiq_geocoded,outside_district,outside own district: moved to district interior point (unverified),unverified_district
+Mafeteng Town,Mafeteng,-29.8224468,27.2388281,locationiq_geocoded,,kept,locationiq_geocoded
+Masite,Mafeteng,-29.710552,27.266124,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Ha Sofonia,Mafeteng,-29.764829357027743,27.168425996241375,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Thabana-Morena,Mafeteng,-29.960076,27.420435,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Ratau,Mafeteng,-29.728040144798424,27.32400504259683,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Kolo,Mafeteng,-29.600644,27.2924188,locationiq_geocoded,,kept,locationiq_geocoded
+Mpharane,Mafeteng,-29.710552,27.266124,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Likhoele,Mafeteng,-29.8634673,27.2678463,locationiq_geocoded,,kept,locationiq_geocoded
+Tosing,Mafeteng,-29.710552,27.266124,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Matelile,Mafeteng,-29.8032414,27.5718266,locationiq_geocoded,,kept,locationiq_geocoded
+Khubetsoana,Maseru,-29.3942249,27.7032709,locationiq_geocoded,,kept,locationiq_geocoded
+Sekhutlong,Maseru,-29.4569282,27.7663243,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Thetsane,Maseru,-29.3382592,27.4619599,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Seshote,Maseru,-29.396778426854343,27.437038690182654,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Maseru CBD,Maseru,-29.31667,27.48333,locationiq_geocoded,,kept,locationiq_geocoded
+Koalabata,Maseru,-29.248007651919792,27.476195610430846,approximated_fallback,outside_district;fallback,outside own district: moved to district interior point (unverified),unverified_district
+Qoaling,Maseru,-29.3442206,27.4871839,locationiq_geocoded,,kept,locationiq_geocoded
+Mafeteng,Maseru,-29.569294,27.8343,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Ha Tsolo,Maseru,-29.34600793335877,27.402982167227727,approximated_fallback,outside_district;fallback,outside own district: moved to district interior point (unverified),unverified_district
+Nazareth,Maseru,-29.4019177,27.80056,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Matala,Maseru,-29.3690486,27.5363088,locationiq_geocoded,,kept,locationiq_geocoded
+Likotsi,Maseru,-29.3799392,27.4529969,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Abia,Maseru,-29.3787702,27.5313884,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Foso,Maseru,-29.569294,27.8343,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Lithoteng,Maseru,-29.3690803,27.5208312,locationiq_geocoded,,kept,locationiq_geocoded
+Phelindaba,Maseru,-29.569294,27.8343,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Qhalasi,Mohale's Hoek,-30.155102618509435,27.498252773973277,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Mphaki,Mohale's Hoek,-30.233278075495733,27.402174299003583,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Ha Ntsie,Mohale's Hoek,-30.210549386338236,27.525675633446156,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Likila,Mohale's Hoek,-30.120612399901546,27.485289027930975,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Mohale's Hoek Town,Mohale's Hoek,-30.106388785296804,27.474871640462737,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Phamong,Mohale's Hoek,-30.06445731452023,27.42126902498126,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Mpiti,Mohale's Hoek,-30.211429439004835,27.429159993660647,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Tosing,Mohale's Hoek,-30.226006757849948,27.3688528068617,approximated_fallback,outside_district;fallback,outside own district: moved to district interior point (unverified),unverified_district
+Ha Sofonia,Mohale's Hoek,-30.140500897182076,27.516383985758733,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Ha Ramarothole,Mohale's Hoek,-30.196187790808967,27.445268930672903,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Ketane,Mohale's Hoek,-30.152757815439198,27.411332011008312,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Sani Top,Mokhotlong,-29.284412329944352,29.018309597705713,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Tlhanyaku,Mokhotlong,-29.367247095439176,29.148873382079465,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Sanquebethu,Mokhotlong,-29.300123087173535,29.039285292366586,approximated_fallback,fallback,moved to council 'Sanqebethu' (LSJ03) interior point,council_match
+Mapholaneng,Mokhotlong,-29.248567104743408,29.016537215183874,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Seforong,Mokhotlong,-29.1964262491131,29.056179080310493,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Malingoaneng,Mokhotlong,-29.322041263846973,29.0365125925704,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Molikaliko,Mokhotlong,-29.329309980081536,29.091782510025567,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Linakaneng,Mokhotlong,-29.24014908647038,29.109752860504983,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Mokhotlong Town,Mokhotlong,-29.249022081561883,29.104382641173093,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Letšeng,Qacha's Nek,-30.06962881520297,28.741029301068487,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Thaba-Tseka,Qacha's Nek,-30.06419441295361,28.615229935040514,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Sehlabathebe,Qacha's Nek,-30.098046850523723,28.669973090964135,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Ha Sekake,Qacha's Nek,-30.0465709,28.3597413,locationiq_geocoded,,kept,locationiq_geocoded
+Qalo,Qacha's Nek,-29.994737,28.687577,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Tsoelike,Qacha's Nek,-30.0402474,28.6841969,locationiq_geocoded,,kept,locationiq_geocoded
+Mphaki,Qacha's Nek,-29.994737,28.687577,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Qacha's Nek Town,Qacha's Nek,-30.042579029190378,28.740869045415522,approximated_fallback,fallback,"kept shared/fallback point, flagged unverified",unverified_district
+Ha Sempe,Quthing,-30.311725,27.8124707,locationiq_geocoded,,kept,locationiq_geocoded
+Likiling,Quthing,-30.410842,27.93756,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Moyeni,Quthing,-30.4016211,27.7056742,locationiq_geocoded,,kept,locationiq_geocoded
+Mount Moorosi,Quthing,-30.2743196,27.8731298,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Makebe,Quthing,-30.410842,27.93756,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Tele Bridge,Quthing,-30.43206,27.567443,locationiq_geocoded,outside_district,outside own district: moved to district interior point (unverified),unverified_district
+Quthing Town,Quthing,-30.4004328,27.7025571,locationiq_geocoded,,kept,locationiq_geocoded
+Chonkong,Quthing,-30.410842,27.93756,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Mphaki,Quthing,-30.19502,28.1433463,locationiq_geocoded,,kept,locationiq_geocoded
+Masitise,Quthing,-30.4033897,27.6409041,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Lejone,Thaba-Tseka,-29.4074136,28.7801725,locationiq_geocoded,,kept,locationiq_geocoded
+Semonkong,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Semongkong,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Thaba-Tseka Town,Thaba-Tseka,-29.5151832,28.6036179,locationiq_geocoded,,kept,locationiq_geocoded
+Mokhele,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Katse,Thaba-Tseka,-29.3379944,28.5048941,locationiq_geocoded,,kept,locationiq_geocoded
+Ha Mofoka,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Nkau,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Likalaneng,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Mapoteng,Thaba-Tseka,-29.4285457,28.7641984,locationiq_geocoded,,kept,locationiq_geocoded
+Mahobong,Thaba-Tseka,-29.556942,28.555247,locationiq_geocoded,stacked,"kept shared/fallback point, flagged unverified; display-offset",unverified_district
+Linakaneng,Thaba-Tseka,-29.4854174,28.9313845,locationiq_geocoded,outside_district,moved to council 'Linakeng' (LSK05) interior point,council_match

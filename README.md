@@ -16,5 +16,5 @@ As the flagship platform of the Mohloli innovation ecosystem, CARES represents a
 
 
 
-**RESULTS Convolution Neural Networks** 
+
 

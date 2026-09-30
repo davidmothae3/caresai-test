@@ -3442,8 +3442,16 @@ function buildList(){
 }
 
 function initMap(){
-  lmap=L.map('map',{zoomControl:true,scrollWheelZoom:true,zoomSnap:0.25}).fitBounds([[-30.7,27.0],[-28.5,29.5]],{padding:[10,10]});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:19}).addTo(lmap);
+  lmap=L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([-29.5,28.3],7);
+  const OSM_ATTR='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  const osmLayer=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:OSM_ATTR,maxZoom:19}).addTo(lmap);
+  // If OpenStreetMap refuses the tiles (e.g. blocked or offline preview), switch to CARTO so the map never goes blank.
+  let osmErrors=0;
+  osmLayer.on('tileerror',()=>{
+    if(++osmErrors!==4) return;
+    lmap.removeLayer(osmLayer);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:OSM_ATTR+' &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:19}).addTo(lmap);
+  });
   gjLayer=L.geoJSON(GEO,{
     style:f=>distStyle(f.properties.name),
     onEachFeature:(f,layer)=>{
@@ -3818,7 +3826,7 @@ function backToOverview(){
   if(gjLayer) gjLayer.eachLayer(l=>gjLayer.resetStyle(l));
   if (communityLayer && lmap.hasLayer(communityLayer)) lmap.removeLayer(communityLayer);
   if (councilLayer) { lmap.removeLayer(councilLayer); councilLayer=null; }
-  lmap.fitBounds([[-30.7,27.0],[-28.5,29.5]],{padding:[10,10]});
+  lmap.setView([-29.5,28.3],7);
   const rp=document.getElementById('right-panel');
   rp.innerHTML=`<div class="no-sel"><div style="font-size:28px;opacity:0.25">⬡</div><div style="font-size:13px;font-weight:600;color:var(--text2)">Select a District</div><div style="font-size:11px;">Click any district on the map or list to view detail.</div></div>`;
   document.querySelectorAll('.dc').forEach(c=>c.classList.remove('active'));

@@ -420,6 +420,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .mdl-warn{margin-top:22px;padding:12px 14px;border-left:4px solid var(--med);background:var(--med-bg);font-size:12.5px;line-height:1.6;color:var(--text2);}
 .mdl-warn li{margin:4px 0 0 18px;}
 @media(max-width:768px){.mdl{padding:14px 14px 80px;}.mdl-cards,.mdl-cm{grid-template-columns:1fr;}.fi{grid-template-columns:120px 1fr 44px;font-size:11px;}}
+
+/* ── FORECAST VIEW ── */
+.vt{display:flex;margin:8px 12px 0;border:1px solid var(--bd2);border-radius:6px;overflow:hidden;flex-shrink:0;}
+.vt button{flex:1;padding:6px 4px;border:none;background:#fff;color:var(--navy);font:600 11px var(--font);cursor:pointer;}
+.vt button.on{background:var(--navy);color:#fff;}
+.fcbox{margin:10px 14px 0;padding:9px 11px;border-left:3px solid var(--blue);background:#eef6fd;font-size:11px;line-height:1.55;color:var(--text2);}
+.fcbox b{color:var(--navy);}
+.fcbars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:120px;margin:10px 0 4px;}
+.fcbars>div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10px;color:var(--text3);}
+.fcbars .pair{display:flex;gap:2px;align-items:flex-end;height:100px;}
+.fcbars .pair i{display:block;width:8px;border-radius:2px 2px 0 0;}
 </style>
 </head>
 <body>
@@ -3299,6 +3310,7 @@ document.querySelectorAll('.tab').forEach(b=>{
 
 function render(){
   const c=document.getElementById('content');
+  if(CD_NOW) CD=(activeTab==='map'&&VIEW==='fc'&&CD_FC)?CD_FC:CD_NOW;
   if(activeTab==='map') renderMap(c);
   else if(activeTab==='trend') renderTrend(c);
   else if(activeTab==='alerts') renderAlerts(c);
@@ -3353,6 +3365,7 @@ function renderMap(c){
     <div class="map-layout">
       <div class="left-panel">
         <div class="lp-header"><span class="lp-title">Districts</span><span class="lp-count">10 total</span></div>
+        <div class="vt" role="group" aria-label="Map view"><button class="${VIEW==='now'?'on':''}" onclick="setView('now')">Observed · Dec 2024</button><button class="${VIEW==='fc'?'on':''}" onclick="setView('fc')">Forecast · Jan 2025</button></div>
         <div class="dist-list" id="dist-list"></div>
       </div>
       <div class="map-wrap">
@@ -3372,7 +3385,7 @@ function renderMap(c){
             <span class="ft-dot school"></span>Schools
           </button>
         </div>
-        <div class="map-badge">Model: <span>CARE-AI v1.0 · XGBoost</span> · Data: <span>Dec 2024</span> · Districts: <span>10/10</span></div>
+        <div class="map-badge">Model: <span>CARE-AI v1.0 · XGBoost</span> · View: <span>${VIEW==='fc'?'Forecast Jan 2025':'Observed Dec 2024'}</span> · Districts: <span>10/10</span></div>
       </div>
       <div class="right-panel" id="right-panel">
         <div style="padding:16px;border-bottom:1px solid var(--bd);background:var(--panel);">
@@ -3403,14 +3416,14 @@ function renderMap(c){
         <div style="padding:12px 14px;border-bottom:1px solid var(--bd);">
           <div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Model</div>
           <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model</span><span style="color:var(--text);font-weight:600">XGBoost Classifier</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Test Accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">97.05%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">ROC-AUC (weighted)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.9954</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-Risk Recall</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">96%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-Risk Precision</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">90%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Macro F1</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.96</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Data</span><span style="color:var(--text);font-weight:600">Notional · DHS-anchored</span></div>
-            <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:4px;">814 held-out records, notebook run. <a href="#" style="color:var(--blue);font-weight:600;" onclick="document.querySelector('.tab[data-tab=models]').click();return false;">Compare all models →</a></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model</span><span style="color:var(--text);font-weight:600">XGBoost · 1-month forecast</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Trained on</span><span style="color:var(--text);font-weight:600;font-family:var(--mono)">2022–2023</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Tested on (unseen)</span><span style="color:var(--text);font-weight:600;font-family:var(--mono)">2024</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Score error (MAE)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">5.3 vs 7.6 naive</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Level accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">80% vs 70% naive</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-risk AUC</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.887 vs 0.824</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-risk watch (≥60)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">87% / 20% (naive 82% / 17%)</span></div>
+            <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:4px;">"Naive" = next month same as this month. One test year, notional data. <a href="#" style="color:var(--blue);font-weight:600;" onclick="document.querySelector('.tab[data-tab=models]').click();return false;">Full backtest →</a></div>
           </div>
         </div>
         <div style="padding:12px 14px;">
@@ -3744,6 +3757,7 @@ function buildDetailPanel(name){
         <span style="font-size:10px;color:var(--text3)">${d.highland?'⛰ Highland':'🌾 Lowland'}</span>
       </div>
       <div class="rp-sub">${d.u5_population.toLocaleString()} children U5 · ${d.communities.length} communities</div>
+      ${fcBanner(d)}
     </div>
     <div class="rp-body">
 
@@ -3885,7 +3899,7 @@ function showJSON(name){
   const d=CD.districts[name];
   const w=wData[name];
   const drvs=drivers(name);
-  const obj={district:d.district,risk_type:"child_climate_health_composite",forecast_window:"next_14_days",risk_score:d.risk_score,risk_level:d.risk_level,main_drivers:drvs.map(dr=>dr.n),recommended_action:action(d.risk_level),rainfall_forecast_mm:w&&!w.error?w.total:"pending",data_sources:["CARES_notional_DHS_anchored_dataset","OpenWeatherMap_API"],generated_at:new Date().toISOString(),model_version:"care-ai-v1.0",confidence_note:"Indicative MVP output — subject to human review"};
+  const obj={district:d.district,risk_type:"child_climate_health_composite",forecast_window:(d.fc?"next_month":"observed_current"),risk_score:d.risk_score,risk_level:d.risk_level,main_drivers:drvs.map(dr=>dr.n),recommended_action:action(d.risk_level),rainfall_forecast_mm:w&&!w.error?w.total:"pending",data_sources:["CARES_notional_DHS_anchored_dataset","OpenWeatherMap_API"],generated_at:new Date().toISOString(),model_version:"care-ai-v1.0",confidence_note:"Indicative MVP output — subject to human review"};
   const str=JSON.stringify(obj,null,2).replace(/"([^"]+)":/g,'<span class="jk">"$1"</span>:').replace(/: "([^"]+)"/g,': <span class="js">"$1"</span>').replace(/: (\d+\.?\d*)/g,': <span class="jn">$1</span>');
   const rb=document.querySelector('.rp-body'); if(!rb) return;
   const existing=document.getElementById('json-output');
@@ -3965,7 +3979,7 @@ function renderAlerts(c){
   c.innerHTML=`
     <div class="ftab">
       <div class="fth">
-        <div><div class="ftitle">Active Risk Alerts — All Districts</div><div class="fsub">CARE-AI v1.0-notional · Data snapshot: Dec 2024 · Scores are not yet forecasts</div></div>
+        <div><div class="ftitle">Active Risk Alerts — All Districts</div><div class="fsub">CARE-AI v1.0-notional · Data snapshot: Dec 2024 · Observed scores · switch the map to Forecast view for next month</div></div>
         <div style="display:flex;gap:7px;">
           <span style="padding:3px 11px;border-radius:11px;background:var(--high-bg);border:1px solid var(--high-bd);font-size:11px;color:var(--high);font-family:var(--mono);">${dists.filter(d=>d.risk_level==='High').length} HIGH</span>
           <span style="padding:3px 11px;border-radius:11px;background:var(--med-bg);border:1px solid var(--med-bd);font-size:11px;color:var(--med);font-family:var(--mono);">${dists.filter(d=>d.risk_level==='Medium').length} MEDIUM</span>
@@ -4063,6 +4077,7 @@ function normalizeRiskLevels(data){
 }
 function buildDashboard(data) {
   normalizeRiskLevels(data);
+  CD_NOW = data; CD_FC = buildForecastData(data);
   CD = data;
   render();
   fetchAllWx();
@@ -4089,6 +4104,35 @@ init();
     <span class="mti">🧠</span>Models
   </button>
 </div>
+
+
+<script>
+/* ── FORECAST (1 month ahead) ── built from CARES.csv: features from month t only (lags, season, static traits),
+   trained on Jan 2022–Dec 2023 and tested on Jan–Dec 2024; final model retrained on all months to forecast Jan 2025. */
+const FORECAST={"target":"Jan 2025","base":"Dec 2024","horizon":"1 month","train":"Jan 2022 \u2013 Dec 2023","test":"Jan \u2013 Dec 2024","thresholdHigh":60,"n_test":1356,"table":[{"name":"Persistence (next month = this month)","mae":7.63,"acc":0.697,"f1":0.539,"auc":0.824,"hrec":0.82,"hprec":0.17},{"name":"Climatology (average for that month)","mae":6.26,"acc":0.748,"f1":0.412,"auc":0.782,"hrec":0.85,"hprec":0.14},{"name":"Seasonal naive (same month last year)","mae":7.49,"acc":0.698,"f1":0.548,"auc":0.824,"hrec":0.84,"hprec":0.18},{"name":"XGBoost forecast","mae":5.32,"acc":0.802,"f1":0.623,"auc":0.887,"hrec":0.87,"hprec":0.2},{"name":"XGBoost + climate outlook*","mae":4.62,"acc":0.805,"f1":0.665,"auc":0.939,"hrec":0.96,"hprec":0.22}],"cm":[[135,133,0],[41,922,16],[0,79,30]],"monthly":[[1,5.35,7.45],[2,4.67,7.75],[3,6.02,7.65],[4,6.47,6.12],[5,5.98,8.8],[6,4.28,13.25],[7,3.49,5.27],[8,3.17,4.47],[9,4.74,5.55],[10,5.88,9.93],[11,6.26,7.61],[12,7.58,7.69]],"dist_bt":{"mae":3.79,"mae_persist":5.88},"imp":[["frost_days",0.2818],["temperature_mean_c",0.0878],["stunting_pct_dhs",0.0779],["m_sin",0.0679],["m_cos",0.062],["diarrhoea_rate_per1000",0.0385],["wasting_pct_dhs",0.0279],["ari_rate_per1000_l2",0.027],["elev",0.0217],["urban_pct",0.0189]],"communities":{"Berea|Ha Lejone":{"s":62.1,"lo":53.3,"hi":70.2,"ph":0.11,"obs":62.4},"Berea|Ha Thetsane":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":67.9},"Berea|Kolo":{"s":61.4,"lo":52.6,"hi":69.5,"ph":0.08,"obs":61.6},"Berea|Kolonyama":{"s":60.2,"lo":51.4,"hi":68.3,"ph":0.06,"obs":63.8},"Berea|Makhoakhoeng":{"s":62.5,"lo":53.7,"hi":70.6,"ph":0.12,"obs":63.3},"Berea|Mapoteng":{"s":59.9,"lo":51.1,"hi":68.0,"ph":0.06,"obs":63.0},"Berea|Morija":{"s":58.5,"lo":49.6,"hi":66.6,"ph":0.03,"obs":61.8},"Berea|Nkau":{"s":60.9,"lo":52.1,"hi":69.0,"ph":0.08,"obs":63.6},"Berea|Peka":{"s":61.5,"lo":52.6,"hi":69.6,"ph":0.09,"obs":68.9},"Berea|Roma":{"s":60.0,"lo":51.2,"hi":68.1,"ph":0.06,"obs":68.2},"Berea|Teyateyaneng":{"s":62.9,"lo":54.1,"hi":71.0,"ph":0.13,"obs":69.7},"Berea|Thaba Bosiu":{"s":62.7,"lo":53.9,"hi":70.8,"ph":0.12,"obs":62.6},"Butha-Buthe|Bethlehem":{"s":67.8,"lo":59.0,"hi":75.9,"ph":0.37,"obs":71.5},"Butha-Buthe|Butha-Buthe Town":{"s":69.0,"lo":60.2,"hi":77.1,"ph":0.44,"obs":64.7},"Butha-Buthe|Fobane":{"s":66.0,"lo":57.2,"hi":74.1,"ph":0.27,"obs":70.6},"Butha-Buthe|Ha Makebe":{"s":64.7,"lo":55.9,"hi":72.8,"ph":0.2,"obs":64.8},"Butha-Buthe|Ha Nqosa":{"s":66.2,"lo":57.4,"hi":74.3,"ph":0.28,"obs":62.8},"Butha-Buthe|Hololo":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.34,"obs":67.4},"Butha-Buthe|Khabo":{"s":67.3,"lo":58.4,"hi":75.3,"ph":0.34,"obs":74.3},"Butha-Buthe|Mafika-Lisiu":{"s":69.1,"lo":60.2,"hi":77.2,"ph":0.44,"obs":75.7},"Butha-Buthe|Motete":{"s":67.4,"lo":58.6,"hi":75.5,"ph":0.35,"obs":74.4},"Butha-Buthe|Ntsekhe":{"s":70.8,"lo":61.9,"hi":78.9,"ph":0.56,"obs":77.1},"Leribe|Ha Lejone":{"s":59.9,"lo":51.1,"hi":68.0,"ph":0.06,"obs":51.5},"Leribe|Ha Mofoka":{"s":61.2,"lo":52.4,"hi":69.3,"ph":0.08,"obs":56.3},"Leribe|Hlotse":{"s":57.6,"lo":48.8,"hi":65.7,"ph":0.02,"obs":49.8},"Leribe|Khabo":{"s":58.7,"lo":49.9,"hi":66.8,"ph":0.03,"obs":52.5},"Leribe|Likila":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":62.5},"Leribe|Mahobong":{"s":60.4,"lo":51.6,"hi":68.5,"ph":0.07,"obs":49.5},"Leribe|Makhunoane":{"s":58.0,"lo":49.2,"hi":66.1,"ph":0.03,"obs":36.8},"Leribe|Maputsoe":{"s":58.8,"lo":49.9,"hi":66.9,"ph":0.04,"obs":45.5},"Leribe|Mokhele":{"s":57.5,"lo":48.7,"hi":65.6,"ph":0.02,"obs":51.4},"Leribe|Ngoajane":{"s":59.8,"lo":51.0,"hi":67.9,"ph":0.06,"obs":48.6},"Leribe|Phafane":{"s":60.7,"lo":51.8,"hi":68.8,"ph":0.07,"obs":60.3},"Leribe|Pitseng":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":42.0},"Leribe|Thaba-Phatsoa":{"s":58.9,"lo":50.1,"hi":67.0,"ph":0.04,"obs":51.2},"Leribe|Tsikoane":{"s":57.1,"lo":48.3,"hi":65.2,"ph":0.02,"obs":57.6},"Mafeteng|Ha Polaki":{"s":64.1,"lo":55.2,"hi":72.2,"ph":0.17,"obs":63.8},"Mafeteng|Ha Ratau":{"s":61.0,"lo":52.2,"hi":69.1,"ph":0.08,"obs":54.5},"Mafeteng|Ha Sofonia":{"s":67.1,"lo":58.3,"hi":75.2,"ph":0.34,"obs":56.3},"Mafeteng|Kolo":{"s":62.7,"lo":53.9,"hi":70.8,"ph":0.12,"obs":53.9},"Mafeteng|Likhoele":{"s":66.8,"lo":58.0,"hi":74.9,"ph":0.32,"obs":52.4},"Mafeteng|Mafeteng Town":{"s":63.6,"lo":54.8,"hi":71.7,"ph":0.16,"obs":61.5},"Mafeteng|Masite":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":58.7},"Mafeteng|Matelile":{"s":66.8,"lo":57.9,"hi":74.9,"ph":0.32,"obs":47.6},"Mafeteng|Mpharane":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":52.8},"Mafeteng|Thabana-Morena":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":55.6},"Mafeteng|Tosing":{"s":66.7,"lo":57.9,"hi":74.8,"ph":0.31,"obs":51.5},"Maseru|Ha Abia":{"s":69.9,"lo":61.1,"hi":78.0,"ph":0.51,"obs":56.3},"Maseru|Ha Foso":{"s":69.0,"lo":60.2,"hi":77.1,"ph":0.44,"obs":56.0},"Maseru|Ha Matala":{"s":64.5,"lo":55.7,"hi":72.6,"ph":0.19,"obs":59.6},"Maseru|Ha Seshote":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.35,"obs":66.1},"Maseru|Ha Thetsane":{"s":65.8,"lo":56.9,"hi":73.9,"ph":0.26,"obs":67.5},"Maseru|Ha Tsolo":{"s":66.0,"lo":57.1,"hi":74.1,"ph":0.27,"obs":60.5},"Maseru|Khubetsoana":{"s":66.2,"lo":57.4,"hi":74.3,"ph":0.28,"obs":68.7},"Maseru|Koalabata":{"s":67.6,"lo":58.8,"hi":75.7,"ph":0.36,"obs":63.4},"Maseru|Likotsi":{"s":66.8,"lo":58.0,"hi":74.9,"ph":0.32,"obs":59.0},"Maseru|Lithoteng":{"s":65.1,"lo":56.3,"hi":73.2,"ph":0.22,"obs":55.6},"Maseru|Mafeteng":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":61.4},"Maseru|Maseru CBD":{"s":69.5,"lo":60.6,"hi":77.6,"ph":0.47,"obs":63.7},"Maseru|Nazareth":{"s":66.7,"lo":57.9,"hi":74.8,"ph":0.31,"obs":60.2},"Maseru|Phelindaba":{"s":70.0,"lo":61.1,"hi":78.1,"ph":0.51,"obs":54.7},"Maseru|Qoaling":{"s":66.9,"lo":58.1,"hi":75.0,"ph":0.33,"obs":63.0},"Maseru|Sekhutlong":{"s":70.9,"lo":62.1,"hi":79.0,"ph":0.57,"obs":68.0},"Mohale's Hoek|Ha Ntsie":{"s":55.1,"lo":46.2,"hi":63.2,"ph":0.01,"obs":57.7},"Mohale's Hoek|Ha Ramarothole":{"s":55.6,"lo":46.8,"hi":63.7,"ph":0.01,"obs":43.7},"Mohale's Hoek|Ha Sofonia":{"s":54.7,"lo":45.9,"hi":62.8,"ph":0.01,"obs":47.9},"Mohale's Hoek|Ketane":{"s":54.5,"lo":45.6,"hi":62.6,"ph":0.01,"obs":43.2},"Mohale's Hoek|Likila":{"s":53.9,"lo":45.1,"hi":62.0,"ph":0.01,"obs":57.4},"Mohale's Hoek|Mohale's Hoek Town":{"s":59.0,"lo":50.2,"hi":67.1,"ph":0.04,"obs":57.2},"Mohale's Hoek|Mphaki":{"s":53.3,"lo":44.4,"hi":61.4,"ph":0.01,"obs":61.6},"Mohale's Hoek|Mpiti":{"s":56.1,"lo":47.3,"hi":64.2,"ph":0.02,"obs":56.6},"Mohale's Hoek|Phamong":{"s":55.8,"lo":47.0,"hi":63.9,"ph":0.01,"obs":56.9},"Mohale's Hoek|Qhalasi":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":66.8},"Mohale's Hoek|Tosing":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":52.1},"Mokhotlong|Linakaneng":{"s":67.2,"lo":58.4,"hi":75.3,"ph":0.34,"obs":66.6},"Mokhotlong|Malingoaneng":{"s":66.8,"lo":57.9,"hi":74.9,"ph":0.32,"obs":68.3},"Mokhotlong|Mapholaneng":{"s":66.0,"lo":57.1,"hi":74.1,"ph":0.27,"obs":70.9},"Mokhotlong|Mokhotlong Town":{"s":66.3,"lo":57.4,"hi":74.4,"ph":0.28,"obs":63.3},"Mokhotlong|Molikaliko":{"s":66.1,"lo":57.3,"hi":74.2,"ph":0.28,"obs":67.1},"Mokhotlong|Sani Top":{"s":71.5,"lo":62.6,"hi":79.6,"ph":0.6,"obs":80.6},"Mokhotlong|Sanquebethu":{"s":65.4,"lo":56.6,"hi":73.5,"ph":0.24,"obs":72.1},"Mokhotlong|Seforong":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.35,"obs":68.4},"Mokhotlong|Tlhanyaku":{"s":65.8,"lo":57.0,"hi":73.9,"ph":0.26,"obs":74.0},"Qacha's Nek|Ha Sekake":{"s":63.4,"lo":54.6,"hi":71.5,"ph":0.15,"obs":60.3},"Qacha's Nek|Let\u0161eng":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":65.5},"Qacha's Nek|Mphaki":{"s":60.7,"lo":51.8,"hi":68.8,"ph":0.07,"obs":54.5},"Qacha's Nek|Qacha's Nek Town":{"s":59.4,"lo":50.6,"hi":67.5,"ph":0.05,"obs":52.4},"Qacha's Nek|Qalo":{"s":64.4,"lo":55.6,"hi":72.5,"ph":0.19,"obs":60.3},"Qacha's Nek|Sehlabathebe":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":60.4},"Qacha's Nek|Thaba-Tseka":{"s":61.8,"lo":52.9,"hi":69.9,"ph":0.1,"obs":62.6},"Qacha's Nek|Tsoelike":{"s":60.2,"lo":51.3,"hi":68.2,"ph":0.06,"obs":55.7},"Quthing|Chonkong":{"s":56.9,"lo":48.0,"hi":64.9,"ph":0.02,"obs":49.4},"Quthing|Ha Makebe":{"s":55.7,"lo":46.9,"hi":63.8,"ph":0.01,"obs":54.2},"Quthing|Ha Sempe":{"s":58.2,"lo":49.3,"hi":66.3,"ph":0.03,"obs":59.4},"Quthing|Likiling":{"s":58.6,"lo":49.8,"hi":66.7,"ph":0.03,"obs":59.1},"Quthing|Masitise":{"s":54.5,"lo":45.7,"hi":62.6,"ph":0.01,"obs":46.2},"Quthing|Mount Moorosi":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":55.7},"Quthing|Moyeni":{"s":54.5,"lo":45.7,"hi":62.6,"ph":0.01,"obs":56.1},"Quthing|Mphaki":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":46.4},"Quthing|Quthing Town":{"s":57.2,"lo":48.4,"hi":65.3,"ph":0.02,"obs":50.4},"Quthing|Tele Bridge":{"s":55.9,"lo":47.1,"hi":64.0,"ph":0.01,"obs":52.6},"Thaba-Tseka|Ha Lejone":{"s":53.5,"lo":44.7,"hi":61.6,"ph":0.01,"obs":36.5},"Thaba-Tseka|Ha Mofoka":{"s":54.2,"lo":45.4,"hi":62.3,"ph":0.01,"obs":31.8},"Thaba-Tseka|Katse":{"s":52.9,"lo":44.1,"hi":61.0,"ph":0.01,"obs":32.8},"Thaba-Tseka|Likalaneng":{"s":51.0,"lo":42.1,"hi":59.1,"ph":0.0,"obs":30.6},"Thaba-Tseka|Linakaneng":{"s":51.6,"lo":42.7,"hi":59.6,"ph":0.0,"obs":29.7},"Thaba-Tseka|Mahobong":{"s":50.2,"lo":41.3,"hi":58.2,"ph":0.0,"obs":29.9},"Thaba-Tseka|Mapoteng":{"s":50.8,"lo":42.0,"hi":58.9,"ph":0.0,"obs":30.3},"Thaba-Tseka|Mokhele":{"s":46.2,"lo":37.3,"hi":54.3,"ph":0.0,"obs":33.3},"Thaba-Tseka|Nkau":{"s":44.8,"lo":36.0,"hi":52.9,"ph":0.0,"obs":31.2},"Thaba-Tseka|Semongkong":{"s":46.6,"lo":37.8,"hi":54.7,"ph":0.0,"obs":34.4},"Thaba-Tseka|Semonkong":{"s":53.2,"lo":44.4,"hi":61.3,"ph":0.01,"obs":35.3},"Thaba-Tseka|Thaba-Tseka Town":{"s":52.8,"lo":44.0,"hi":60.9,"ph":0.0,"obs":34.1}},"districts":{"Berea":{"s":61.1,"lo":54.9,"hi":66.6,"ph":0.02,"obs":64.6},"Butha-Buthe":{"s":67.5,"lo":61.3,"hi":73.1,"ph":0.32,"obs":70.3},"Leribe":{"s":59.1,"lo":52.9,"hi":64.7,"ph":0.01,"obs":50.9},"Mafeteng":{"s":65.1,"lo":58.9,"hi":70.6,"ph":0.12,"obs":55.4},"Maseru":{"s":67.6,"lo":61.4,"hi":73.1,"ph":0.32,"obs":61.4},"Mohale's Hoek":{"s":55.3,"lo":49.1,"hi":60.9,"ph":0.01,"obs":54.4},"Mokhotlong":{"s":66.9,"lo":60.7,"hi":72.5,"ph":0.28,"obs":70.2},"Qacha's Nek":{"s":61.4,"lo":55.2,"hi":67.0,"ph":0.02,"obs":59.1},"Quthing":{"s":56.7,"lo":50.5,"hi":62.2,"ph":0.01,"obs":53.1},"Thaba-Tseka":{"s":50.6,"lo":44.4,"hi":56.2,"ph":0.0,"obs":32.5}},"interval":"80% range from 2024 out-of-sample errors"};
+let VIEW='now', CD_NOW=null, CD_FC=null;
+function buildForecastData(now){
+  const fc=JSON.parse(JSON.stringify(now)); let miss=0;
+  Object.values(fc.districts).forEach(d=>{
+    const f=FORECAST.districts[d.district]; if(!f){miss++;return;}
+    d.obs_now=d.risk_score; d.fc=f; d.risk_score=f.s; d.risk_level=RL(f.s);
+    (d.communities||[]).forEach(c=>{
+      const g=FORECAST.communities[d.district+'|'+c.name]; if(!g){miss++;return;}
+      c.fc=g; c.risk_score=g.s; c.risk_level=RL(g.s);
+    });
+  });
+  if(miss) console.warn('Forecast missing for',miss,'districts/communities');
+  return fc;
+}
+function setView(v){
+  VIEW=v; const t=document.querySelector('.tab.active'); if(t) t.click();
+}
+function fcBanner(d){
+  if(VIEW!=='fc'||!d.fc) return '';
+  const f=d.fc;
+  return `<div class="fcbox"><b>Forecast for ${FORECAST.target}</b> · score <b>${f.s.toFixed(1)}</b> (80% range ${f.lo.toFixed(0)}–${f.hi.toFixed(0)}) · chance of High <b>${Math.round(f.ph*100)}%</b><br>Last observed in the dataset (${FORECAST.base}): ${f.obs.toFixed(1)}. Indicator readings below are the latest observed values, not forecasts.</div>`;
+}
+</script>
 
 <script>
 function switchMobileTab(tab, btn) {
@@ -4405,7 +4449,34 @@ let mdlSel='xgb';
 function renderModels(c){
   const M=MODEL_RESULTS, best=M.models.reduce((a,b)=>b.acc>a.acc?b:a), pc=v=>(v*100).toFixed(1)+'%';
   c.innerHTML=`<div class="mdl">
-   <h2>Trained model results</h2>
+   <h2>Forecast model: next month's risk</h2>
+   <div class="sub">Uses only information available <b>before</b> the month being predicted · trained ${FORECAST.train} · tested on ${FORECAST.test} (${FORECAST.n_test.toLocaleString()} community-months the model never saw)</div>
+   <div class="mdl-cards">
+     <div class="mdl-card best"><b class="n">Score error (MAE)</b><div class="big">${FORECAST.table[3].mae}</div><div class="kv"><span>Persistence</span><span>${FORECAST.table[0].mae}</span></div><div class="kv"><span>Climatology</span><span>${FORECAST.table[1].mae}</span></div><div class="kv"><span>Districts only</span><span>${FORECAST.dist_bt.mae} vs ${FORECAST.dist_bt.mae_persist}</span></div></div>
+     <div class="mdl-card best"><b class="n">Level accuracy</b><div class="big">${(FORECAST.table[3].acc*100).toFixed(0)}%</div><div class="kv"><span>Persistence</span><span>${(FORECAST.table[0].acc*100).toFixed(0)}%</span></div><div class="kv"><span>Macro F1</span><span>${FORECAST.table[3].f1} vs ${FORECAST.table[0].f1}</span></div></div>
+     <div class="mdl-card best"><b class="n">High-risk ranking (AUC)</b><div class="big">${FORECAST.table[3].auc}</div><div class="kv"><span>Persistence</span><span>${FORECAST.table[0].auc}</span></div><div class="kv"><span>Watch at ≥${FORECAST.thresholdHigh}: caught</span><span>${Math.round(FORECAST.table[3].hrec*100)}%</span></div><div class="kv"><span>Watch precision</span><span>${Math.round(FORECAST.table[3].hprec*100)}%</span></div></div>
+   </div>
+   <h3>Does it beat simple guesses? (2024 test year)</h3>
+   <table class="sim-tbl"><thead><tr><th>Method</th><th class="num">MAE ↓</th><th class="num">Accuracy</th><th class="num">Macro F1</th><th class="num">High AUC</th><th class="num">High caught</th><th class="num">High precision</th></tr></thead><tbody>
+   ${FORECAST.table.map((t,i)=>`<tr style="${i===3?'font-weight:700;background:#eef6fd':''}"><td>${t.name}</td><td class="num">${t.mae}</td><td class="num">${(t.acc*100).toFixed(1)}%</td><td class="num">${t.f1}</td><td class="num">${t.auc}</td><td class="num">${Math.round(t.hrec*100)}%</td><td class="num">${Math.round(t.hprec*100)}%</td></tr>`).join('')}</tbody></table>
+   <div class="sub" style="margin-top:6px">"High caught / precision" is the same watch flag for every method: predicted score ≥ ${FORECAST.thresholdHigh} (threshold picked on 2023 data only) against actual High (≥ 70). *Uses the real next-month rainfall and temperature as if a perfect seasonal outlook existed, so treat it as an upper bound.</div>
+   <h3>Forecast error by month (2024), model vs. "same as this month"</h3>
+   <div class="fcbars">${FORECAST.monthly.map(m=>`<div><div class="pair"><i style="height:${m[1]/14*100}px;background:var(--blue)" title="Model ${m[1]}"></i><i style="height:${m[2]/14*100}px;background:#C8D0DC" title="Persistence ${m[2]}"></i></div>${MONTHS[m[0]-1]}</div>`).join('')}</div>
+   <div class="sub"><span style="color:var(--blue)">■</span> XGBoost forecast &nbsp; <span style="color:#98a3b3">■</span> persistence · bar height = average score error (lower is better)</div>
+   <div class="mdl-cm" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="cmt"><div class="t">Forecast confusion matrix (rows = actual, columns = forecast)</div><div class="cmg"><div class="h"></div>${MODEL_RESULTS.classes.map(k=>`<div class="h">${k}</div>`).join('')}
+     ${FORECAST.cm.map((row,i)=>`<div class="h" style="padding-top:10px">${MODEL_RESULTS.classes[i]}</div>`+row.map((v,j)=>{const a=v/Math.max(...FORECAST.cm.flat());return `<div style="background:rgba(0,119,204,${(0.06+0.9*a).toFixed(2)});color:${a>.45?'#fff':'var(--text)'};${i===j?'font-weight:700':''}">${v}</div>`}).join('')).join('')}</div></div>
+    <div class="cmt"><div class="t">What the forecast relies on</div>${FORECAST.imp.slice(0,6).map(([n,v])=>`<div class="fi" style="grid-template-columns:150px 1fr 44px"><span>${n}</span><span class="b"><i style="width:${v/FORECAST.imp[0][1]*100}%"></i></span><span class="v">${v.toFixed(2)}</span></div>`).join('')}</div>
+   </div>
+   <div class="mdl-warn" style="margin-top:14px;border-left-color:var(--blue);background:#eef6fd"><b>What this does and does not show</b>
+    <ul>
+     <li><b>It is a genuine out-of-sample test.</b> Every prediction uses only earlier months, and the test year comes entirely after the training years, so the score formula cannot be re-learned from future inputs.</li>
+     <li><b>Horizon is one month,</b> because the dataset is monthly. It cannot support the 14-day window used elsewhere in the project.</li>
+     <li><b>One test year, notional data.</b> Three years of history is thin; treat the gaps between methods as indicative, not proven. The watch flag is deliberately sensitive: only about 1 in 5 flagged community-months turned out High, so expect false alarms.</li>
+     <li><b>Weak spots:</b> Low-risk months are often forecast as Medium (see matrix), and High at the strict ≥70 level is caught only about a quarter of the time. A watch flag at ≥60 catches most High months, but the simple baselines do almost as well at that (82% vs 87%), so the model's real gains are in score error, overall accuracy and ranking, not in extra High-risk alerts.</li>
+     <li>Switch the map to <b>Forecast · Jan 2025</b> to see the model's predictions for every district and community, with an 80% range and chance of High.</li>
+    </ul></div>
+   <h2 style="margin-top:34px">Same-month classification (not a forecast)</h2>
    <div class="sub">Predicting <b>risk_level</b> (Low / Medium / High) on 814 held-out records · 80/20 split · SMOTE on training data only · notional DHS-anchored dataset</div>
    <div class="mdl-cards">${M.models.map(m=>`<div class="mdl-card ${m===best?'best':''}"><b class="n">${m.name}${m===best?' · best':''}</b><div class="big">${pc(m.acc)}</div>
      <div class="kv"><span>ROC-AUC (weighted)</span><span>${m.auc.toFixed(4)}</span></div>
@@ -4421,9 +4492,9 @@ function renderModels(c){
    <h3>What drives the predictions</h3>
    <div class="mdl-btns" id="mdl-btns">${M.models.map(m=>`<button data-m="${m.id}">${m.name}</button>`).join('')}</div>
    <div id="mdl-fi"></div>
-   <div class="mdl-warn"><b>Read before relying on these numbers</b>
+   <div class="mdl-warn"><b>Read before relying on the same-month numbers</b>
     <ul>
-     <li><b>The label is a rule, not an outcome.</b> In CARES.csv, risk_level follows risk_score exactly (Low &lt; 45, Medium 45–69.9, High ≥ 70), and risk_score appears to be built from the same disease rates, rainfall and WASH inputs the models see (a linear fit on those inputs already explains about 70% of it). The models are probably re-learning the scoring formula, so the accuracy is not evidence of forecasting skill.</li>
+     <li><b>For the section above only: the label is a rule, not an outcome.</b> In CARES.csv, risk_level follows risk_score exactly (Low &lt; 45, Medium 45–69.9, High ≥ 70), and risk_score appears to be built from the same disease rates, rainfall and WASH inputs the models see (a linear fit on those inputs already explains about 70% of it). The models are probably re-learning the scoring formula, so the accuracy is not evidence of forecasting skill.</li>
      <li><b>Random split.</b> Rows from the same communities and months sit in both training and test sets. A fair test would hold out whole months or districts.</li>
      <li><b>Notional data.</b> None of this is a validated clinical or epidemiological result.</li>
      <li><b>Notebook text vs. computed importances.</b> The notebook summary names safe water, sanitation and urbanisation as top drivers, but the importances above (diarrhoea rate, ARI rate, rainfall) are what the models actually computed, and all three agree.</li>

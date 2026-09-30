@@ -3384,19 +3384,19 @@ function renderMap(c){
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Districts</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">10</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Object.keys(CD.districts).length}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Communities</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">113</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Object.values(CD.districts).reduce((n,d)=>n+(d.communities||[]).length,0)}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">High Risk</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:#CC2200">2</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:#CC2200">${Object.values(CD.districts).filter(d=>d.risk_level==='High').length}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Children U5</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">285k</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Math.round(Object.values(CD.districts).reduce((n,d)=>n+d.u5_population,0)/1000)}k</div>
             </div>
           </div>
         </div>
@@ -4047,7 +4047,19 @@ async function init() {
   }
 }
 
+// Risk level must always follow the score using the legend thresholds (High >= 70, Medium 45-69, Low < 45).
+// Some data exports carry a stale risk_level (e.g. Butha-Buthe scored 62.6 but was labelled High), so recompute it here.
+function normalizeRiskLevels(data){
+  const fixed=[];
+  Object.values(data.districts).forEach(d=>{
+    const dl=RL(d.risk_score);
+    if(d.risk_level!==dl){fixed.push(`${d.district}: ${d.risk_level} -> ${dl} (score ${d.risk_score})`);d.risk_level=dl;}
+    (d.communities||[]).forEach(c=>{const cl=RL(c.risk_score);if(c.risk_level!==cl){c.risk_level=cl;}});
+  });
+  if(fixed.length) console.warn('Risk level corrected to match score:',fixed);
+}
 function buildDashboard(data) {
+  normalizeRiskLevels(data);
   CD = data;
   render();
   fetchAllWx();

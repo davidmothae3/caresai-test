@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARES — Climate Anticipatory Risk & Early Warning System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -206,7 +207,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .pt{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px;}
 .pr{display:flex;justify-content:space-between;gap:12px;margin:2px 0;color:var(--text3);}
 .pr span{color:var(--text);font-family:var(--mono);font-weight:600;}
-.leaflet-control-attribution{display:none;}
+.leaflet-control-attribution{font-size:10px;}
 .leaflet-control-zoom a{background:#fff !important;border-color:var(--bd) !important;color:var(--navy) !important;}
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
@@ -352,6 +353,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   .mobile-tabs { display: none !important; }
 }
   /* Test so it updates */
+
+/* ── SCENARIO SIMULATOR TAB ── */
+.sim{display:grid;grid-template-columns:310px 1fr;height:100%;min-height:0;}
+.sim-l{background:var(--panel);border-right:1px solid var(--bd);padding:16px 16px 20px;overflow-y:auto;}
+.sim-r{padding:18px 22px 28px;overflow-y:auto;min-height:0;}
+.sim h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.sim-l label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text2);margin:14px 0 4px;}
+.sim-l label output{font-family:var(--mono);font-weight:500;color:var(--text3);}
+.sim-l select{width:100%;padding:7px 8px;border:1px solid var(--bd2);border-radius:6px;font:inherit;background:#fff;color:var(--text);}
+.sim-l input[type=range]{width:100%;accent-color:var(--blue);}
+.sim-pre{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.sim-pre button{padding:5px 10px;border-radius:5px;border:1px solid var(--bd2);background:#fff;color:var(--navy);font:600 11px var(--font);cursor:pointer;}
+.sim-pre button:hover{background:var(--navy);color:#fff;}
+.sim-note{margin-top:16px;padding:9px 11px;border-left:3px solid #C9A84C;background:#fffaf0;font-size:11px;line-height:1.5;color:var(--text2);}
+.sim-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+.sim-head h2{font-size:22px;color:var(--navy);}
+.sim-badge{padding:3px 11px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;}
+.sim-sub{font-size:12px;color:var(--text3);margin-bottom:14px;}
+.sim-sub b{color:var(--text);font-family:var(--mono);}
+.sim-cond{background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:6px 14px 10px;margin-bottom:14px;}
+.sim-row{margin:10px 0 0;}
+.sim-row .t{display:flex;justify-content:space-between;font-size:12px;font-weight:600;}
+.sim-row .t span:last-child{font-family:var(--mono);font-weight:500;color:var(--text3);}
+.sim-bar{position:relative;height:12px;background:var(--bd);border-radius:6px;margin-top:4px;}
+.sim-bar i{display:block;height:100%;border-radius:6px;transition:width .35s,background .35s;}
+.sim-bar u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy);}
+.sim-legend{font-size:10px;color:var(--text3);margin-top:8px;}
+.sim-act{font-size:12.5px;line-height:1.6;color:var(--text2);margin-bottom:16px;}
+.sim-act li{margin-left:18px;margin-bottom:4px;}
+.sim-tbl{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--bd);border-radius:8px;overflow:hidden;}
+.sim-tbl th{text-align:left;padding:7px 10px;background:var(--bg);color:var(--text3);font-size:11px;font-weight:600;}
+.sim-tbl td{padding:7px 10px;border-top:1px solid var(--bd);}
+.sim-tbl tr[data-d]{cursor:pointer;}
+.sim-tbl tr[data-d]:hover td,.sim-tbl tr.on td{background:#eef4fb;}
+.sim-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;}
+.sim-tbl .num{font-family:var(--mono);text-align:right;}
+@media (max-width:768px){
+  .sim{display:block;overflow-y:auto;height:100%;}
+  .sim-l{border-right:none;border-bottom:1px solid var(--bd);overflow:visible;}
+  .sim-r{padding:14px 14px 30px;overflow:visible;}
+}
 </style>
 </head>
 <body>
@@ -365,6 +407,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <button class="tab active" data-tab="map">District Risk Map</button>
     <button class="tab" data-tab="trend">Trend Analysis</button>
     <button class="tab" data-tab="alerts">Alert Feed</button>
+    <button class="tab" data-tab="sim">Scenarios</button>
   </div>
   <div class="tr">
     <span class="tbadge gold">Dec 2024 Snapshot</span>
@@ -3232,6 +3275,7 @@ function render(){
   if(activeTab==='map') renderMap(c);
   else if(activeTab==='trend') renderTrend(c);
   else if(activeTab==='alerts') renderAlerts(c);
+  else if(activeTab==='sim') renderSim(c);
 }
 
 // ── WEATHER ────────────────────────────────────────────
@@ -3371,7 +3415,7 @@ function buildList(){
 
 function initMap(){
   lmap=L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([-29.5,28.3],7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(lmap);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:19}).addTo(lmap);
   gjLayer=L.geoJSON(GEO,{
     style:f=>distStyle(f.properties.name),
     onEachFeature:(f,layer)=>{
@@ -3987,6 +4031,9 @@ init();
   <button class="mobile-tab-btn" data-tab="alerts" onclick="switchMobileTab('alerts',this)">
     <span class="mti">🔔</span>Alerts
   </button>
+  <button class="mobile-tab-btn" data-tab="sim" onclick="switchMobileTab('sim',this)">
+    <span class="mti">🌦</span>Scenario
+  </button>
 </div>
 
 <script>
@@ -4189,6 +4236,100 @@ openDist = function(name) {
     openBottomSheet(name);
   }
 };
+</script>
+
+
+<script>
+/* ── SCENARIO SIMULATOR ─────────────────────────────────────────────
+   Takes each district's baseline from care_ai_output.json (CD) and shows how a
+   weather shock would move it. Rule-based teaching model: NOT the CARE-AI model. */
+const SIM={d:null,rain:0,drop:0,snow:0};
+const simClamp=(x,a=0,b=100)=>Math.min(b,Math.max(a,x));
+function simCalc(d,s){
+  const a=s.rain/100, wet=Math.max(0,a), dry=Math.max(0,-a), hi=d.highland, wash=1-d.safe_water/100;
+  const cold=t=>hi?simClamp((20-t)*3.5):simClamp((14-t)*2);
+  const dia=d.diarrhoea_rate/6+wet*(20+80*wash)+dry*10;
+  const ari=d.ari_rate/5+s.drop*(hi?2.2:1.4);
+  const hypo=cold(d.temp-s.drop)+s.snow*(hi?.3:.12);
+  const sam=20+(100-d.safe_water)*.8+(hi?8:0)+dry*40+s.snow*(hi?.25:.1);
+  const score=d.risk_score+wet*(10+40*wash)+dry*9+s.drop*(hi?1.6:.8)+s.snow/100*(hi?12:5);
+  return {score:simClamp(score),conds:[
+    ['Diarrhoeal disease',simClamp(dia)],['Acute respiratory infection',simClamp(ari)],
+    ['Hypothermia (proxy)',simClamp(hypo)],['Severe acute malnutrition (proxy)',simClamp(sam)]]};
+}
+const simLvl=v=>v>=70?['High',HIGH]:v>=45?['Medium',MED]:['Low',LOW];
+const SIM_ACT={
+  'Diarrhoeal disease':'Pre-position ORS and zinc; chlorinate community water points; alert CHWs for household visits.',
+  'Acute respiratory infection':'Warn clinics to expect more pneumonia; check oxygen and antibiotic stock.',
+  'Hypothermia (proxy)':'Send blanket and warm-clothing kits; reinforce skin-to-skin care for newborns.',
+  'Severe acute malnutrition (proxy)':'Bring forward MUAC screening and RUTF supply, especially where roads may close.'
+};
+const SIM_PRE={normal:[0,0,0],cold:[-10,10,60],flood:[90,0,10],drought:[-90,0,0]};
+
+function renderSim(c){
+  const names=Object.keys(CD.districts).sort();
+  if(!SIM.d||!CD.districts[SIM.d]) SIM.d=names.includes('Maseru')?'Maseru':names[0];
+  c.innerHTML=`<div class="sim">
+   <div class="sim-l">
+     <h3>Weather scenario</h3>
+     <label for="sim-d">District</label>
+     <select id="sim-d">${names.map(n=>`<option value="${ea(n)}">${n}</option>`).join('')}</select>
+     <label for="sim-rain">Rainfall vs. district average <output id="sim-rainO"></output></label>
+     <input id="sim-rain" type="range" min="-100" max="100" step="5">
+     <label for="sim-drop">Cold snap (below normal) <output id="sim-dropO"></output></label>
+     <input id="sim-drop" type="range" min="0" max="15" step="1">
+     <label for="sim-snow">Snow / road disruption <output id="sim-snowO"></output></label>
+     <input id="sim-snow" type="range" min="0" max="100" step="5">
+     <div class="sim-pre">
+       <button data-p="normal">Baseline</button><button data-p="cold">Cold snap</button>
+       <button data-p="flood">Flooding</button><button data-p="drought">Drought</button>
+     </div>
+     <div class="sim-note"><b>How to read this.</b> Baselines come from the dashboard data (prototype, notional). The scenario is a simple rule-based what-if, not a CARE-AI forecast. Hypothermia and malnutrition have no rates in the dataset yet, so those two bars are illustrative proxies.</div>
+   </div>
+   <div class="sim-r" id="sim-out" aria-live="polite"></div>
+  </div>`;
+  const q=id=>document.getElementById(id);
+  q('sim-d').value=SIM.d; q('sim-rain').value=SIM.rain; q('sim-drop').value=SIM.drop; q('sim-snow').value=SIM.snow;
+  const upd=()=>{
+    SIM.d=q('sim-d').value; SIM.rain=+q('sim-rain').value; SIM.drop=+q('sim-drop').value; SIM.snow=+q('sim-snow').value;
+    q('sim-rainO').textContent=(SIM.rain>0?'+':'')+SIM.rain+'%';
+    q('sim-dropO').textContent=SIM.drop?'−'+SIM.drop+' °C':'none';
+    q('sim-snowO').textContent=SIM.snow+'%';
+    simResults();
+  };
+  ['sim-d','sim-rain','sim-drop','sim-snow'].forEach(id=>q(id).addEventListener('input',upd));
+  c.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    [SIM.rain,SIM.drop,SIM.snow]=SIM_PRE[b.dataset.p];
+    q('sim-rain').value=SIM.rain;q('sim-drop').value=SIM.drop;q('sim-snow').value=SIM.snow;upd();
+  });
+  q('sim-out').addEventListener('click',e=>{
+    const r=e.target.closest('tr[data-d]'); if(r){q('sim-d').value=r.dataset.d;upd();}
+  });
+  upd();
+}
+
+function simResults(){
+  const d=CD.districts[SIM.d], zero={rain:0,drop:0,snow:0};
+  const now=simCalc(d,SIM), base=simCalc(d,zero);
+  const [lv,col]=simLvl(now.score), delta=now.score-d.risk_score;
+  const ds=(delta>=0?'+':'')+delta.toFixed(1);
+  const rows=Object.values(CD.districts).map(x=>({x,s:simCalc(x,SIM).score})).sort((a,b)=>b.s-a.s);
+  const top=now.conds.map((k,i)=>({n:k[0],v:k[1],b:base.conds[i][1]})).sort((a,b)=>(b.v-b.b)-(a.v-a.b)||b.v-a.v);
+  const acts=now.conds.filter(k=>k[1]>=45).sort((a,b)=>b[1]-a[1]).slice(0,3).map(k=>`<li><b>${k[0].replace(' (proxy)','')}:</b> ${SIM_ACT[k[0]]}</li>`);
+  document.getElementById('sim-out').innerHTML=`
+   <div class="sim-head"><h2>${d.district}</h2><span class="sim-badge" style="background:${col}">${lv} risk</span></div>
+   <div class="sim-sub">Score <b>${now.score.toFixed(1)}</b> (baseline <b>${d.risk_score.toFixed(1)}</b>, change <b>${ds}</b>) · ${d.u5_population.toLocaleString()} children under 5 · ${d.highland?'Highland':'Lowland'}</div>
+   <div class="sim-cond"><h3 style="margin-top:8px">Illness pressure under this scenario</h3>
+   ${now.conds.map((k,i)=>{const [l,cc]=simLvl(k[1]);return `<div class="sim-row"><div class="t"><span>${k[0]}</span><span>${k[1].toFixed(0)} · ${l}</span></div>
+     <div class="sim-bar" role="img" aria-label="${k[0]} ${k[1].toFixed(0)} of 100, ${l}"><i style="width:${k[1]}%;background:${cc}"></i><u style="left:${base.conds[i][1]}%" title="Baseline"></u></div></div>`}).join('')}
+   <div class="sim-legend">Dark tick = baseline weather. Scores are relative (0–100), not case counts.</div></div>
+   <h3>Suggested early actions</h3>
+   <ul class="sim-act">${acts.length?acts.join(''):'<li>No action needed beyond routine surveillance and the standard CHW schedule.</li>'}</ul>
+   <h3>All districts under this scenario</h3>
+   <table class="sim-tbl"><thead><tr><th>District</th><th class="num">Baseline</th><th class="num">Scenario</th><th class="num">Change</th></tr></thead><tbody>
+   ${rows.map(({x,s})=>{const dl=s-x.risk_score;return `<tr data-d="${ea(x.district)}" class="${x.district===SIM.d?'on':''}"><td><span class="sim-dot" style="background:${simLvl(s)[1]}"></span>${x.district}</td><td class="num">${x.risk_score.toFixed(1)}</td><td class="num">${s.toFixed(1)}</td><td class="num">${dl>=0?'+':''}${dl.toFixed(1)}</td></tr>`}).join('')}
+   </tbody></table>`;
+}
 </script>
 
 </body>

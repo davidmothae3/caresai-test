@@ -20,22 +20,38 @@ As the flagship platform of the Mohloli innovation ecosystem, CARES represents a
 Here's a summary of the technologies used in this project and their functions:
 
 **pandas (pd)**: Utilized for efficient data manipulation and analysis, such as loading CSV files, handling missing values (dropna), encoding categorical features, and managing DataFrames.
+
 **NumPy (np):** Used for numerical operations, especially in array manipulation (e.g., np.argmax for CNN predictions) and statistical calculations.
+
 **Matplotlib (plt) & Seaborn (sns):** Essential for data visualization, creating plots such as distribution plots (countplot), confusion matrices, feature importance bar charts, and scatter plots.
+
 **Scikit-learn (sklearn):** A comprehensive machine learning library used for:
+
 **train_test_split:** Dividing data into training and testing sets.
+
 **StandardScaler:** Feature scaling to standardize data.
+
 **RandomForestClassifier:** Implementing the Random Forest model for classification.
+
 **classification_report, confusion_matrix, accuracy_score, roc_auc_score:** Evaluating model performance with various metrics.
+
 **KFold:** Performing cross-validation for model stability assessment.
+
 **Imbalanced-learn (imblearn.over_sampling.SMOTE):** Addressing class imbalance in the dataset by oversampling the minority classes.
+
 **TensorFlow/Keras (tensorflow.keras):** The deep learning framework used for:
+
 **Sequential:** Building the Convolutional Neural Network (CNN) model layer by layer.
+
 **Conv1D, MaxPooling1D, Flatten, Dense, Dropout:** Defining the architecture of the CNN, including convolutional layers, pooling, flattening, dense layers, and dropout for regularization.
 Model compilation (compile) and training (fit).
+
 **XGBoost (xgboost, XGBClassifier):** An optimized gradient boosting library used for building the XGBoost Classifier model, known for its performance and efficiency.
+
 **ELI5 (eli5, eli5.sklearn.PermutationImportance):** A library for debugging machine learning classifiers and explaining their predictions, specifically used here for Permutation Importance to understand feature relevance in the CNN.
+
 **SHAP (shap, shap.GradientExplainer):** A powerful tool for explaining the output of any machine learning model. It was used with GradientExplainer to provide local and global explanations of the CNN's predictions through SHAP values and summary plots.
+
 **json:** For working with JSON data, specifically for structuring and printing the project_summary dictionary.
 
 

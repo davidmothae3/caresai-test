@@ -3372,7 +3372,7 @@ function renderMap(c){
             <span class="ft-dot school"></span>Schools
           </button>
         </div>
-        <div class="map-badge">Model: <span>CARE-AI v1.0</span> · Data: <span>Dec 2024</span> · Districts: <span>10/10</span></div>
+        <div class="map-badge">Model: <span>CARE-AI v1.0 · XGBoost</span> · Data: <span>Dec 2024</span> · Districts: <span>10/10</span></div>
       </div>
       <div class="right-panel" id="right-panel">
         <div style="padding:16px;border-bottom:1px solid var(--bd);background:var(--panel);">
@@ -3403,11 +3403,14 @@ function renderMap(c){
         <div style="padding:12px 14px;border-bottom:1px solid var(--bd);">
           <div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Model</div>
           <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Architecture</span><span style="color:var(--text);font-weight:600">CARE-AI v1.0</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model Accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">95%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Cross-Validation</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">94.62%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model</span><span style="color:var(--text);font-weight:600">XGBoost Classifier</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Test Accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">97.05%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">ROC-AUC (weighted)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.9954</span></div>
             <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-Risk Recall</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">96%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-Risk Precision</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">90%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Macro F1</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.96</span></div>
             <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Data</span><span style="color:var(--text);font-weight:600">Notional · DHS-anchored</span></div>
+            <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:4px;">814 held-out records, notebook run. <a href="#" style="color:var(--blue);font-weight:600;" onclick="document.querySelector('.tab[data-tab=models]').click();return false;">Compare all models →</a></div>
           </div>
         </div>
         <div style="padding:12px 14px;">

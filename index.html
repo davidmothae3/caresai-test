@@ -4049,16 +4049,67 @@ function setSrcBadge(txt,warn){
   const b=document.getElementById('src-badge'); if(!b) return;
   b.textContent=txt; if(warn){b.style.color='#FFB347';b.style.borderColor='rgba(255,136,0,0.6)';}
 }
+// ── DATA: CARES.csv ───────────────────────────────────────────────
+// One row per community per month (record_type=community). The dashboard now builds everything from this file:
+//  • "Now" = the latest month in the CSV; community values are that month's row
+//  • District values = simple mean of its communities (u5_population = sum); risk_score is the CSV's own score
+//  • Trends = monthly district mean risk_score for the latest year
+function parseCSV(text){
+  const rows=[]; let row=[], f='', q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; }
+    else if(ch==='"') q=true;
+    else if(ch===','){ row.push(f); f=''; }
+    else if(ch==='\n'){ row.push(f); f=''; rows.push(row); row=[]; }
+    else if(ch!=='\r') f+=ch;
+  }
+  if(f!==''||row.length){ row.push(f); rows.push(row); }
+  const head=rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.length===head.length).map(r=>Object.fromEntries(head.map((h,i)=>[h,r[i]])));
+}
+function buildFromCSV(text){
+  const rows=parseCSV(text).filter(r=>(r.record_type||'community')==='community').map(r=>({
+    year:+r.year, month:+r.month, district:r.district, name:r.community,
+    highland:String(r.highland).toLowerCase()==='true', u5:+r.u5_population,
+    rain:+r.rainfall_mm, temp:+r.temperature_mean_c, dia:+r.diarrhoea_rate_per1000, ari:+r.ari_rate_per1000,
+    water:+r.safe_water_pct, score:+r.risk_score, level:r.risk_level }));
+  if(!rows.length) throw new Error('no community rows in CARES.csv');
+  const key=r=>r.year*100+r.month, latest=Math.max(...rows.map(key));
+  const ly=Math.floor(latest/100), lm=latest%100;
+  const r1=v=>Math.round(v*10)/10, mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  const now=rows.filter(r=>key(r)===latest);
+  const geo=(typeof HARDCODED_CD!=='undefined'&&HARDCODED_CD.districts)||{};
+  const districts={};
+  [...new Set(now.map(r=>r.district))].forEach(dn=>{
+    const cs=now.filter(r=>r.district===dn);
+    districts[dn]={ district:dn, risk_score:r1(mean(cs.map(c=>c.score))), risk_level:'',
+      lat:(geo[dn]||{}).lat, lng:(geo[dn]||{}).lng, highland:cs[0].highland,
+      rainfall:r1(mean(cs.map(c=>c.rain))), temp:r1(mean(cs.map(c=>c.temp))),
+      diarrhoea_rate:r1(mean(cs.map(c=>c.dia))), ari_rate:r1(mean(cs.map(c=>c.ari))),
+      safe_water:r1(mean(cs.map(c=>c.water))), u5_population:cs.reduce((s,c)=>s+c.u5,0),
+      communities:cs.map(c=>({name:c.name, risk_score:c.score, risk_level:c.level,
+        diarrhoea_rate:c.dia, ari_rate:c.ari, rainfall:c.rain, safe_water:c.water, temp:c.temp,
+        highland:c.highland, u5_pop:c.u5})) };
+    districts[dn].risk_level=RL(districts[dn].risk_score);
+  });
+  const trends={};
+  Object.keys(districts).forEach(dn=>{
+    trends[dn]=Array.from({length:12},(_,i)=>{
+      const m=rows.filter(r=>r.district===dn&&r.year===ly&&r.month===i+1);
+      return m.length?r1(mean(m.map(x=>x.score))):null; });
+  });
+  return {districts, trends, data_source:'CARES.csv', as_of:`${ly}-${String(lm).padStart(2,'0')}`};
+}
 async function init() {
   try {
-    const response = await fetch('care_ai_output.json');
+    const response = await fetch('CARES.csv', {cache:'no-cache'});
     if (!response.ok) throw new Error('HTTP '+response.status);
-    const liveData = await response.json();
-    if(!liveData||!liveData.districts||!liveData.trends) throw new Error('unexpected JSON shape');
-    buildDashboard(liveData);
-    setSrcBadge('Data: care_ai_output.json');
+    const data = buildFromCSV(await response.text());
+    buildDashboard(data);
+    setSrcBadge('Data: CARES.csv · '+data.as_of);
   } catch (e) {
-    console.warn('care_ai_output.json unavailable, using embedded notional dataset:', e.message);
+    console.warn('CARES.csv unavailable, using embedded copy of the Dec 2024 data:', e.message);
     buildDashboard(HARDCODED_CD);
     setSrcBadge('Data: embedded fallback', true);
   }
@@ -4339,7 +4390,7 @@ openDist = function(name) {
 
 <script>
 /* ── SCENARIO SIMULATOR ─────────────────────────────────────────────
-   Takes each district's baseline from care_ai_output.json (CD) and shows how a
+   Takes each district's baseline from CARES.csv (CD) and shows how a
    weather shock would move it. Rule-based teaching model: NOT the CARE-AI model. */
 const SIM={d:null,rain:0,drop:0,snow:0};
 const simClamp=(x,a=0,b=100)=>Math.min(b,Math.max(a,x));

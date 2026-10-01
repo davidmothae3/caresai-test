@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARES — Climate Anticipatory Risk & Early Warning System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -206,7 +207,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .pt{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px;}
 .pr{display:flex;justify-content:space-between;gap:12px;margin:2px 0;color:var(--text3);}
 .pr span{color:var(--text);font-family:var(--mono);font-weight:600;}
-.leaflet-control-attribution{display:none;}
+.leaflet-control-attribution{font-size:10px;}
 .leaflet-control-zoom a{background:#fff !important;border-color:var(--bd) !important;color:var(--navy) !important;}
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
@@ -352,19 +353,99 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   .mobile-tabs { display: none !important; }
 }
   /* Test so it updates */
+
+/* ── SCENARIO SIMULATOR TAB ── */
+.sim{display:grid;grid-template-columns:310px 1fr;height:100%;min-height:0;}
+.sim-l{background:var(--panel);border-right:1px solid var(--bd);padding:16px 16px 20px;overflow-y:auto;}
+.sim-r{padding:18px 22px 28px;overflow-y:auto;min-height:0;}
+.sim h3{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.sim-l label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text2);margin:14px 0 4px;}
+.sim-l label output{font-family:var(--mono);font-weight:500;color:var(--text3);}
+.sim-l select{width:100%;padding:7px 8px;border:1px solid var(--bd2);border-radius:6px;font:inherit;background:#fff;color:var(--text);}
+.sim-l input[type=range]{width:100%;accent-color:var(--blue);}
+.sim-pre{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.sim-pre button{padding:5px 10px;border-radius:5px;border:1px solid var(--bd2);background:#fff;color:var(--navy);font:600 11px var(--font);cursor:pointer;}
+.sim-pre button:hover{background:var(--navy);color:#fff;}
+.sim-note{margin-top:16px;padding:9px 11px;border-left:3px solid #C9A84C;background:#fffaf0;font-size:11px;line-height:1.5;color:var(--text2);}
+.sim-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+.sim-head h2{font-size:22px;color:var(--navy);}
+.sim-badge{padding:3px 11px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;}
+.sim-sub{font-size:12px;color:var(--text3);margin-bottom:14px;}
+.sim-sub b{color:var(--text);font-family:var(--mono);}
+.sim-cond{background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:6px 14px 10px;margin-bottom:14px;}
+.sim-row{margin:10px 0 0;}
+.sim-row .t{display:flex;justify-content:space-between;font-size:12px;font-weight:600;}
+.sim-row .t span:last-child{font-family:var(--mono);font-weight:500;color:var(--text3);}
+.sim-bar{position:relative;height:12px;background:var(--bd);border-radius:6px;margin-top:4px;}
+.sim-bar i{display:block;height:100%;border-radius:6px;transition:width .35s,background .35s;}
+.sim-bar u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy);}
+.sim-legend{font-size:10px;color:var(--text3);margin-top:8px;}
+.sim-act{font-size:12.5px;line-height:1.6;color:var(--text2);margin-bottom:16px;}
+.sim-act li{margin-left:18px;margin-bottom:4px;}
+.sim-tbl{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--bd);border-radius:8px;overflow:hidden;}
+.sim-tbl th{text-align:left;padding:7px 10px;background:var(--bg);color:var(--text3);font-size:11px;font-weight:600;}
+.sim-tbl td{padding:7px 10px;border-top:1px solid var(--bd);}
+.sim-tbl tr[data-d]{cursor:pointer;}
+.sim-tbl tr[data-d]:hover td,.sim-tbl tr.on td{background:#eef4fb;}
+.sim-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;}
+.sim-tbl .num{font-family:var(--mono);text-align:right;}
+@media (max-width:768px){
+  .sim{display:block;overflow-y:auto;height:100%;}
+  .sim-l{border-right:none;border-bottom:1px solid var(--bd);overflow:visible;}
+  .sim-r{padding:14px 14px 30px;overflow:visible;}
+}
+
+/* ── MODEL RESULTS TAB ── */
+.mdl{height:100%;overflow-y:auto;padding:18px 22px 40px;max-width:1150px;margin:0 auto;}
+.mdl h2{font-size:22px;color:var(--navy);margin-bottom:4px;}.mdl h3{font-size:13px;font-weight:700;color:var(--navy);margin:20px 0 8px;}
+.mdl .sub{font-size:12px;color:var(--text3);margin-bottom:14px;}
+.mdl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.mdl-card{background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;}
+.mdl-card.best{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue);}
+.mdl-card b.n{font-size:13px;color:var(--navy);}.mdl-card .big{font:700 26px var(--mono);color:var(--navy);margin:4px 0;}
+.mdl-card .kv{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text2);padding:2px 0;}
+.mdl-card .kv span:last-child{font-family:var(--mono);}
+.mdl-cm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.cmt{background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;}
+.cmt .t{font-size:12px;font-weight:600;margin-bottom:6px;}
+.cmg{display:grid;grid-template-columns:44px repeat(3,1fr);gap:3px;font-size:11px;text-align:center;}
+.cmg div{padding:9px 2px;border-radius:4px;font-family:var(--mono);}
+.cmg .h{padding:2px;color:var(--text3);font-family:var(--font);font-size:10px;}
+.mdl-btns{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.mdl-btns button{padding:5px 11px;border-radius:5px;border:1px solid var(--bd2);background:#fff;color:var(--navy);font:600 11px var(--font);cursor:pointer;}
+.mdl-btns button.on{background:var(--navy);color:#fff;}
+.fi{display:grid;grid-template-columns:190px 1fr 52px;gap:8px;align-items:center;font-size:12px;margin:5px 0;}
+.fi .b{height:12px;background:var(--bd);border-radius:6px;overflow:hidden;}.fi .b i{display:block;height:100%;background:var(--blue);border-radius:6px;}
+.fi .v{font-family:var(--mono);color:var(--text3);text-align:right;}
+.mdl-warn{margin-top:22px;padding:12px 14px;border-left:4px solid var(--med);background:var(--med-bg);font-size:12.5px;line-height:1.6;color:var(--text2);}
+.mdl-warn li{margin:4px 0 0 18px;}
+@media(max-width:768px){.mdl{padding:14px 14px 80px;}.mdl-cards,.mdl-cm{grid-template-columns:1fr;}.fi{grid-template-columns:120px 1fr 44px;font-size:11px;}}
+
+/* ── FORECAST VIEW ── */
+.vt{display:flex;margin:8px 12px 0;border:1px solid var(--bd2);border-radius:6px;overflow:hidden;flex-shrink:0;}
+.vt button{flex:1;padding:6px 4px;border:none;background:#fff;color:var(--navy);font:600 11px var(--font);cursor:pointer;}
+.vt button.on{background:var(--navy);color:#fff;}
+.fcbox{margin:10px 14px 0;padding:9px 11px;border-left:3px solid var(--blue);background:#eef6fd;font-size:11px;line-height:1.55;color:var(--text2);}
+.fcbox b{color:var(--navy);}
+.fcbars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:120px;margin:10px 0 4px;}
+.fcbars>div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10px;color:var(--text3);}
+.fcbars .pair{display:flex;gap:2px;align-items:flex-end;height:100px;}
+.fcbars .pair i{display:block;width:8px;border-radius:2px 2px 0 0;}
 </style>
 </head>
 <body>
 <div class="app">
 <div class="topbar">
   <div class="tl">
-    <img src="https://titaniumxgroup.com/wp-content/uploads/2026/05/cares-logo.png" style="height:58px;width:auto;object-fit:contain;margin-top:-4px;" alt="CARES">
+    <img src="https://titaniumxgroup.com/wp-content/uploads/2026/05/cares-logo.png" style="height:58px;width:auto;object-fit:contain;margin-top:-4px;" alt="CARES" onerror="this.style.display='none'">
     <div><div class="bm">CARES</div><div class="bs">Climate Anticipatory Risk & Early Warning System</div></div>
   </div>
   <div class="tabs">
     <button class="tab active" data-tab="map">District Risk Map</button>
     <button class="tab" data-tab="trend">Trend Analysis</button>
     <button class="tab" data-tab="alerts">Alert Feed</button>
+    <button class="tab" data-tab="sim">Scenarios</button>
+    <button class="tab" data-tab="models">Model Results</button>
   </div>
   <div class="tr">
     <span class="tbadge gold">Dec 2024 Snapshot</span>
@@ -3229,9 +3310,12 @@ document.querySelectorAll('.tab').forEach(b=>{
 
 function render(){
   const c=document.getElementById('content');
+  if(CD_NOW) CD=(activeTab==='map'&&VIEW==='fc'&&CD_FC)?CD_FC:CD_NOW;
   if(activeTab==='map') renderMap(c);
   else if(activeTab==='trend') renderTrend(c);
   else if(activeTab==='alerts') renderAlerts(c);
+  else if(activeTab==='sim') renderSim(c);
+  else if(activeTab==='models') renderModels(c);
 }
 
 // ── WEATHER ────────────────────────────────────────────
@@ -3281,6 +3365,7 @@ function renderMap(c){
     <div class="map-layout">
       <div class="left-panel">
         <div class="lp-header"><span class="lp-title">Districts</span><span class="lp-count">10 total</span></div>
+        <div class="vt" role="group" aria-label="Map view"><button class="${VIEW==='now'?'on':''}" onclick="setView('now')">Observed · Dec 2024</button><button class="${VIEW==='fc'?'on':''}" onclick="setView('fc')">Forecast · Jan 2025</button></div>
         <div class="dist-list" id="dist-list"></div>
       </div>
       <div class="map-wrap">
@@ -3300,7 +3385,7 @@ function renderMap(c){
             <span class="ft-dot school"></span>Schools
           </button>
         </div>
-        <div class="map-badge">Model: <span>CARE-AI v1.0</span> · Data: <span>Dec 2024</span> · Districts: <span>10/10</span></div>
+        <div class="map-badge">Model: <span>CARE-AI v1.0 · XGBoost</span> · View: <span>${VIEW==='fc'?'Forecast Jan 2025':'Observed Dec 2024'}</span> · Districts: <span>10/10</span></div>
       </div>
       <div class="right-panel" id="right-panel">
         <div style="padding:16px;border-bottom:1px solid var(--bd);background:var(--panel);">
@@ -3312,30 +3397,33 @@ function renderMap(c){
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Districts</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">10</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Object.keys(CD.districts).length}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Communities</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">113</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Object.values(CD.districts).reduce((n,d)=>n+(d.communities||[]).length,0)}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">High Risk</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:#CC2200">2</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:#CC2200">${Object.values(CD.districts).filter(d=>d.risk_level==='High').length}</div>
             </div>
             <div style="padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:5px;">
               <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Children U5</div>
-              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">285k</div>
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--navy)">${Math.round(Object.values(CD.districts).reduce((n,d)=>n+d.u5_population,0)/1000)}k</div>
             </div>
           </div>
         </div>
         <div style="padding:12px 14px;border-bottom:1px solid var(--bd);">
           <div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Model</div>
           <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Architecture</span><span style="color:var(--text);font-weight:600">CARE-AI v1.0</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model Accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">95%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Cross-Validation</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">94.62%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-Risk Recall</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">96%</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Data</span><span style="color:var(--text);font-weight:600">Notional · DHS-anchored</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Model</span><span style="color:var(--text);font-weight:600">XGBoost · 1-month forecast</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Trained on</span><span style="color:var(--text);font-weight:600;font-family:var(--mono)">2022–2023</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Tested on (unseen)</span><span style="color:var(--text);font-weight:600;font-family:var(--mono)">2024</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Score error (MAE)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">5.3 vs 7.6 naive</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">Level accuracy</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">80% vs 70% naive</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-risk AUC</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">0.887 vs 0.824</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text3)">High-risk watch (≥60)</span><span style="color:#22AA44;font-weight:600;font-family:var(--mono)">87% / 20% (naive 82% / 17%)</span></div>
+            <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:4px;">"Naive" = next month same as this month. One test year, notional data. <a href="#" style="color:var(--blue);font-weight:600;" onclick="document.querySelector('.tab[data-tab=models]').click();return false;">Full backtest →</a></div>
           </div>
         </div>
         <div style="padding:12px 14px;">
@@ -3371,7 +3459,15 @@ function buildList(){
 
 function initMap(){
   lmap=L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([-29.5,28.3],7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(lmap);
+  const OSM_ATTR='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  const osmLayer=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:OSM_ATTR,maxZoom:19}).addTo(lmap);
+  // If OpenStreetMap refuses the tiles (e.g. blocked or offline preview), switch to CARTO so the map never goes blank.
+  let osmErrors=0;
+  osmLayer.on('tileerror',()=>{
+    if(++osmErrors!==4) return;
+    lmap.removeLayer(osmLayer);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:OSM_ATTR+' &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:19}).addTo(lmap);
+  });
   gjLayer=L.geoJSON(GEO,{
     style:f=>distStyle(f.properties.name),
     onEachFeature:(f,layer)=>{
@@ -3661,6 +3757,7 @@ function buildDetailPanel(name){
         <span style="font-size:10px;color:var(--text3)">${d.highland?'⛰ Highland':'🌾 Lowland'}</span>
       </div>
       <div class="rp-sub">${d.u5_population.toLocaleString()} children U5 · ${d.communities.length} communities</div>
+      ${fcBanner(d)}
     </div>
     <div class="rp-body">
 
@@ -3802,7 +3899,7 @@ function showJSON(name){
   const d=CD.districts[name];
   const w=wData[name];
   const drvs=drivers(name);
-  const obj={district:d.district,risk_type:"child_climate_health_composite",forecast_window:"next_14_days",risk_score:d.risk_score,risk_level:d.risk_level,main_drivers:drvs.map(dr=>dr.n),recommended_action:action(d.risk_level),rainfall_forecast_mm:w&&!w.error?w.total:"pending",data_sources:["CARES_notional_DHS_anchored_dataset","OpenWeatherMap_API"],generated_at:new Date().toISOString(),model_version:"care-ai-v1.0",confidence_note:"Indicative MVP output — subject to human review"};
+  const obj={district:d.district,risk_type:"child_climate_health_composite",forecast_window:(d.fc?"next_month":"observed_current"),risk_score:d.risk_score,risk_level:d.risk_level,main_drivers:drvs.map(dr=>dr.n),recommended_action:action(d.risk_level),rainfall_forecast_mm:w&&!w.error?w.total:"pending",data_sources:["CARES_notional_DHS_anchored_dataset","OpenWeatherMap_API"],generated_at:new Date().toISOString(),model_version:"care-ai-v1.0",confidence_note:"Indicative MVP output — subject to human review"};
   const str=JSON.stringify(obj,null,2).replace(/"([^"]+)":/g,'<span class="jk">"$1"</span>:').replace(/: "([^"]+)"/g,': <span class="js">"$1"</span>').replace(/: (\d+\.?\d*)/g,': <span class="jn">$1</span>');
   const rb=document.querySelector('.rp-body'); if(!rb) return;
   const existing=document.getElementById('json-output');
@@ -3882,7 +3979,7 @@ function renderAlerts(c){
   c.innerHTML=`
     <div class="ftab">
       <div class="fth">
-        <div><div class="ftitle">Active Risk Alerts — All Districts</div><div class="fsub">CARE-AI v1.0-notional · Data snapshot: Dec 2024 · Scores are not yet forecasts</div></div>
+        <div><div class="ftitle">Active Risk Alerts — All Districts</div><div class="fsub">CARE-AI v1.0-notional · Data snapshot: Dec 2024 · Observed scores · switch the map to Forecast view for next month</div></div>
         <div style="display:flex;gap:7px;">
           <span style="padding:3px 11px;border-radius:11px;background:var(--high-bg);border:1px solid var(--high-bd);font-size:11px;color:var(--high);font-family:var(--mono);">${dists.filter(d=>d.risk_level==='High').length} HIGH</span>
           <span style="padding:3px 11px;border-radius:11px;background:var(--med-bg);border:1px solid var(--med-bd);font-size:11px;color:var(--med);font-family:var(--mono);">${dists.filter(d=>d.risk_level==='Medium').length} MEDIUM</span>
@@ -3967,7 +4064,20 @@ async function init() {
   }
 }
 
+// Risk level must always follow the score using the legend thresholds (High >= 70, Medium 45-69, Low < 45).
+// Some data exports carry a stale risk_level (e.g. Butha-Buthe scored 62.6 but was labelled High), so recompute it here.
+function normalizeRiskLevels(data){
+  const fixed=[];
+  Object.values(data.districts).forEach(d=>{
+    const dl=RL(d.risk_score);
+    if(d.risk_level!==dl){fixed.push(`${d.district}: ${d.risk_level} -> ${dl} (score ${d.risk_score})`);d.risk_level=dl;}
+    (d.communities||[]).forEach(c=>{const cl=RL(c.risk_score);if(c.risk_level!==cl){c.risk_level=cl;}});
+  });
+  if(fixed.length) console.warn('Risk level corrected to match score:',fixed);
+}
 function buildDashboard(data) {
+  normalizeRiskLevels(data);
+  CD_NOW = data; CD_FC = buildForecastData(data);
   CD = data;
   render();
   fetchAllWx();
@@ -3987,7 +4097,42 @@ init();
   <button class="mobile-tab-btn" data-tab="alerts" onclick="switchMobileTab('alerts',this)">
     <span class="mti">🔔</span>Alerts
   </button>
+  <button class="mobile-tab-btn" data-tab="sim" onclick="switchMobileTab('sim',this)">
+    <span class="mti">🌦</span>Scenario
+  </button>
+  <button class="mobile-tab-btn" data-tab="models" onclick="switchMobileTab('models',this)">
+    <span class="mti">🧠</span>Models
+  </button>
 </div>
+
+
+<script>
+/* ── FORECAST (1 month ahead) ── built from CARES.csv: features from month t only (lags, season, static traits),
+   trained on Jan 2022–Dec 2023 and tested on Jan–Dec 2024; final model retrained on all months to forecast Jan 2025. */
+const FORECAST={"target":"Jan 2025","base":"Dec 2024","horizon":"1 month","train":"Jan 2022 \u2013 Dec 2023","test":"Jan \u2013 Dec 2024","thresholdHigh":60,"n_test":1356,"table":[{"name":"Persistence (next month = this month)","mae":7.63,"acc":0.697,"f1":0.539,"auc":0.824,"hrec":0.82,"hprec":0.17},{"name":"Climatology (average for that month)","mae":6.26,"acc":0.748,"f1":0.412,"auc":0.782,"hrec":0.85,"hprec":0.14},{"name":"Seasonal naive (same month last year)","mae":7.49,"acc":0.698,"f1":0.548,"auc":0.824,"hrec":0.84,"hprec":0.18},{"name":"XGBoost forecast","mae":5.32,"acc":0.802,"f1":0.623,"auc":0.887,"hrec":0.87,"hprec":0.2},{"name":"XGBoost + climate outlook*","mae":4.62,"acc":0.805,"f1":0.665,"auc":0.939,"hrec":0.96,"hprec":0.22}],"cm":[[135,133,0],[41,922,16],[0,79,30]],"monthly":[[1,5.35,7.45],[2,4.67,7.75],[3,6.02,7.65],[4,6.47,6.12],[5,5.98,8.8],[6,4.28,13.25],[7,3.49,5.27],[8,3.17,4.47],[9,4.74,5.55],[10,5.88,9.93],[11,6.26,7.61],[12,7.58,7.69]],"dist_bt":{"mae":3.79,"mae_persist":5.88},"imp":[["frost_days",0.2818],["temperature_mean_c",0.0878],["stunting_pct_dhs",0.0779],["m_sin",0.0679],["m_cos",0.062],["diarrhoea_rate_per1000",0.0385],["wasting_pct_dhs",0.0279],["ari_rate_per1000_l2",0.027],["elev",0.0217],["urban_pct",0.0189]],"communities":{"Berea|Ha Lejone":{"s":62.1,"lo":53.3,"hi":70.2,"ph":0.11,"obs":62.4},"Berea|Ha Thetsane":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":67.9},"Berea|Kolo":{"s":61.4,"lo":52.6,"hi":69.5,"ph":0.08,"obs":61.6},"Berea|Kolonyama":{"s":60.2,"lo":51.4,"hi":68.3,"ph":0.06,"obs":63.8},"Berea|Makhoakhoeng":{"s":62.5,"lo":53.7,"hi":70.6,"ph":0.12,"obs":63.3},"Berea|Mapoteng":{"s":59.9,"lo":51.1,"hi":68.0,"ph":0.06,"obs":63.0},"Berea|Morija":{"s":58.5,"lo":49.6,"hi":66.6,"ph":0.03,"obs":61.8},"Berea|Nkau":{"s":60.9,"lo":52.1,"hi":69.0,"ph":0.08,"obs":63.6},"Berea|Peka":{"s":61.5,"lo":52.6,"hi":69.6,"ph":0.09,"obs":68.9},"Berea|Roma":{"s":60.0,"lo":51.2,"hi":68.1,"ph":0.06,"obs":68.2},"Berea|Teyateyaneng":{"s":62.9,"lo":54.1,"hi":71.0,"ph":0.13,"obs":69.7},"Berea|Thaba Bosiu":{"s":62.7,"lo":53.9,"hi":70.8,"ph":0.12,"obs":62.6},"Butha-Buthe|Bethlehem":{"s":67.8,"lo":59.0,"hi":75.9,"ph":0.37,"obs":71.5},"Butha-Buthe|Butha-Buthe Town":{"s":69.0,"lo":60.2,"hi":77.1,"ph":0.44,"obs":64.7},"Butha-Buthe|Fobane":{"s":66.0,"lo":57.2,"hi":74.1,"ph":0.27,"obs":70.6},"Butha-Buthe|Ha Makebe":{"s":64.7,"lo":55.9,"hi":72.8,"ph":0.2,"obs":64.8},"Butha-Buthe|Ha Nqosa":{"s":66.2,"lo":57.4,"hi":74.3,"ph":0.28,"obs":62.8},"Butha-Buthe|Hololo":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.34,"obs":67.4},"Butha-Buthe|Khabo":{"s":67.3,"lo":58.4,"hi":75.3,"ph":0.34,"obs":74.3},"Butha-Buthe|Mafika-Lisiu":{"s":69.1,"lo":60.2,"hi":77.2,"ph":0.44,"obs":75.7},"Butha-Buthe|Motete":{"s":67.4,"lo":58.6,"hi":75.5,"ph":0.35,"obs":74.4},"Butha-Buthe|Ntsekhe":{"s":70.8,"lo":61.9,"hi":78.9,"ph":0.56,"obs":77.1},"Leribe|Ha Lejone":{"s":59.9,"lo":51.1,"hi":68.0,"ph":0.06,"obs":51.5},"Leribe|Ha Mofoka":{"s":61.2,"lo":52.4,"hi":69.3,"ph":0.08,"obs":56.3},"Leribe|Hlotse":{"s":57.6,"lo":48.8,"hi":65.7,"ph":0.02,"obs":49.8},"Leribe|Khabo":{"s":58.7,"lo":49.9,"hi":66.8,"ph":0.03,"obs":52.5},"Leribe|Likila":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":62.5},"Leribe|Mahobong":{"s":60.4,"lo":51.6,"hi":68.5,"ph":0.07,"obs":49.5},"Leribe|Makhunoane":{"s":58.0,"lo":49.2,"hi":66.1,"ph":0.03,"obs":36.8},"Leribe|Maputsoe":{"s":58.8,"lo":49.9,"hi":66.9,"ph":0.04,"obs":45.5},"Leribe|Mokhele":{"s":57.5,"lo":48.7,"hi":65.6,"ph":0.02,"obs":51.4},"Leribe|Ngoajane":{"s":59.8,"lo":51.0,"hi":67.9,"ph":0.06,"obs":48.6},"Leribe|Phafane":{"s":60.7,"lo":51.8,"hi":68.8,"ph":0.07,"obs":60.3},"Leribe|Pitseng":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":42.0},"Leribe|Thaba-Phatsoa":{"s":58.9,"lo":50.1,"hi":67.0,"ph":0.04,"obs":51.2},"Leribe|Tsikoane":{"s":57.1,"lo":48.3,"hi":65.2,"ph":0.02,"obs":57.6},"Mafeteng|Ha Polaki":{"s":64.1,"lo":55.2,"hi":72.2,"ph":0.17,"obs":63.8},"Mafeteng|Ha Ratau":{"s":61.0,"lo":52.2,"hi":69.1,"ph":0.08,"obs":54.5},"Mafeteng|Ha Sofonia":{"s":67.1,"lo":58.3,"hi":75.2,"ph":0.34,"obs":56.3},"Mafeteng|Kolo":{"s":62.7,"lo":53.9,"hi":70.8,"ph":0.12,"obs":53.9},"Mafeteng|Likhoele":{"s":66.8,"lo":58.0,"hi":74.9,"ph":0.32,"obs":52.4},"Mafeteng|Mafeteng Town":{"s":63.6,"lo":54.8,"hi":71.7,"ph":0.16,"obs":61.5},"Mafeteng|Masite":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":58.7},"Mafeteng|Matelile":{"s":66.8,"lo":57.9,"hi":74.9,"ph":0.32,"obs":47.6},"Mafeteng|Mpharane":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":52.8},"Mafeteng|Thabana-Morena":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":55.6},"Mafeteng|Tosing":{"s":66.7,"lo":57.9,"hi":74.8,"ph":0.31,"obs":51.5},"Maseru|Ha Abia":{"s":69.9,"lo":61.1,"hi":78.0,"ph":0.51,"obs":56.3},"Maseru|Ha Foso":{"s":69.0,"lo":60.2,"hi":77.1,"ph":0.44,"obs":56.0},"Maseru|Ha Matala":{"s":64.5,"lo":55.7,"hi":72.6,"ph":0.19,"obs":59.6},"Maseru|Ha Seshote":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.35,"obs":66.1},"Maseru|Ha Thetsane":{"s":65.8,"lo":56.9,"hi":73.9,"ph":0.26,"obs":67.5},"Maseru|Ha Tsolo":{"s":66.0,"lo":57.1,"hi":74.1,"ph":0.27,"obs":60.5},"Maseru|Khubetsoana":{"s":66.2,"lo":57.4,"hi":74.3,"ph":0.28,"obs":68.7},"Maseru|Koalabata":{"s":67.6,"lo":58.8,"hi":75.7,"ph":0.36,"obs":63.4},"Maseru|Likotsi":{"s":66.8,"lo":58.0,"hi":74.9,"ph":0.32,"obs":59.0},"Maseru|Lithoteng":{"s":65.1,"lo":56.3,"hi":73.2,"ph":0.22,"obs":55.6},"Maseru|Mafeteng":{"s":67.9,"lo":59.1,"hi":76.0,"ph":0.37,"obs":61.4},"Maseru|Maseru CBD":{"s":69.5,"lo":60.6,"hi":77.6,"ph":0.47,"obs":63.7},"Maseru|Nazareth":{"s":66.7,"lo":57.9,"hi":74.8,"ph":0.31,"obs":60.2},"Maseru|Phelindaba":{"s":70.0,"lo":61.1,"hi":78.1,"ph":0.51,"obs":54.7},"Maseru|Qoaling":{"s":66.9,"lo":58.1,"hi":75.0,"ph":0.33,"obs":63.0},"Maseru|Sekhutlong":{"s":70.9,"lo":62.1,"hi":79.0,"ph":0.57,"obs":68.0},"Mohale's Hoek|Ha Ntsie":{"s":55.1,"lo":46.2,"hi":63.2,"ph":0.01,"obs":57.7},"Mohale's Hoek|Ha Ramarothole":{"s":55.6,"lo":46.8,"hi":63.7,"ph":0.01,"obs":43.7},"Mohale's Hoek|Ha Sofonia":{"s":54.7,"lo":45.9,"hi":62.8,"ph":0.01,"obs":47.9},"Mohale's Hoek|Ketane":{"s":54.5,"lo":45.6,"hi":62.6,"ph":0.01,"obs":43.2},"Mohale's Hoek|Likila":{"s":53.9,"lo":45.1,"hi":62.0,"ph":0.01,"obs":57.4},"Mohale's Hoek|Mohale's Hoek Town":{"s":59.0,"lo":50.2,"hi":67.1,"ph":0.04,"obs":57.2},"Mohale's Hoek|Mphaki":{"s":53.3,"lo":44.4,"hi":61.4,"ph":0.01,"obs":61.6},"Mohale's Hoek|Mpiti":{"s":56.1,"lo":47.3,"hi":64.2,"ph":0.02,"obs":56.6},"Mohale's Hoek|Phamong":{"s":55.8,"lo":47.0,"hi":63.9,"ph":0.01,"obs":56.9},"Mohale's Hoek|Qhalasi":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":66.8},"Mohale's Hoek|Tosing":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":52.1},"Mokhotlong|Linakaneng":{"s":67.2,"lo":58.4,"hi":75.3,"ph":0.34,"obs":66.6},"Mokhotlong|Malingoaneng":{"s":66.8,"lo":57.9,"hi":74.9,"ph":0.32,"obs":68.3},"Mokhotlong|Mapholaneng":{"s":66.0,"lo":57.1,"hi":74.1,"ph":0.27,"obs":70.9},"Mokhotlong|Mokhotlong Town":{"s":66.3,"lo":57.4,"hi":74.4,"ph":0.28,"obs":63.3},"Mokhotlong|Molikaliko":{"s":66.1,"lo":57.3,"hi":74.2,"ph":0.28,"obs":67.1},"Mokhotlong|Sani Top":{"s":71.5,"lo":62.6,"hi":79.6,"ph":0.6,"obs":80.6},"Mokhotlong|Sanquebethu":{"s":65.4,"lo":56.6,"hi":73.5,"ph":0.24,"obs":72.1},"Mokhotlong|Seforong":{"s":67.3,"lo":58.5,"hi":75.4,"ph":0.35,"obs":68.4},"Mokhotlong|Tlhanyaku":{"s":65.8,"lo":57.0,"hi":73.9,"ph":0.26,"obs":74.0},"Qacha's Nek|Ha Sekake":{"s":63.4,"lo":54.6,"hi":71.5,"ph":0.15,"obs":60.3},"Qacha's Nek|Let\u0161eng":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":65.5},"Qacha's Nek|Mphaki":{"s":60.7,"lo":51.8,"hi":68.8,"ph":0.07,"obs":54.5},"Qacha's Nek|Qacha's Nek Town":{"s":59.4,"lo":50.6,"hi":67.5,"ph":0.05,"obs":52.4},"Qacha's Nek|Qalo":{"s":64.4,"lo":55.6,"hi":72.5,"ph":0.19,"obs":60.3},"Qacha's Nek|Sehlabathebe":{"s":61.5,"lo":52.7,"hi":69.6,"ph":0.09,"obs":60.4},"Qacha's Nek|Thaba-Tseka":{"s":61.8,"lo":52.9,"hi":69.9,"ph":0.1,"obs":62.6},"Qacha's Nek|Tsoelike":{"s":60.2,"lo":51.3,"hi":68.2,"ph":0.06,"obs":55.7},"Quthing|Chonkong":{"s":56.9,"lo":48.0,"hi":64.9,"ph":0.02,"obs":49.4},"Quthing|Ha Makebe":{"s":55.7,"lo":46.9,"hi":63.8,"ph":0.01,"obs":54.2},"Quthing|Ha Sempe":{"s":58.2,"lo":49.3,"hi":66.3,"ph":0.03,"obs":59.4},"Quthing|Likiling":{"s":58.6,"lo":49.8,"hi":66.7,"ph":0.03,"obs":59.1},"Quthing|Masitise":{"s":54.5,"lo":45.7,"hi":62.6,"ph":0.01,"obs":46.2},"Quthing|Mount Moorosi":{"s":59.6,"lo":50.8,"hi":67.7,"ph":0.05,"obs":55.7},"Quthing|Moyeni":{"s":54.5,"lo":45.7,"hi":62.6,"ph":0.01,"obs":56.1},"Quthing|Mphaki":{"s":54.8,"lo":46.0,"hi":62.9,"ph":0.01,"obs":46.4},"Quthing|Quthing Town":{"s":57.2,"lo":48.4,"hi":65.3,"ph":0.02,"obs":50.4},"Quthing|Tele Bridge":{"s":55.9,"lo":47.1,"hi":64.0,"ph":0.01,"obs":52.6},"Thaba-Tseka|Ha Lejone":{"s":53.5,"lo":44.7,"hi":61.6,"ph":0.01,"obs":36.5},"Thaba-Tseka|Ha Mofoka":{"s":54.2,"lo":45.4,"hi":62.3,"ph":0.01,"obs":31.8},"Thaba-Tseka|Katse":{"s":52.9,"lo":44.1,"hi":61.0,"ph":0.01,"obs":32.8},"Thaba-Tseka|Likalaneng":{"s":51.0,"lo":42.1,"hi":59.1,"ph":0.0,"obs":30.6},"Thaba-Tseka|Linakaneng":{"s":51.6,"lo":42.7,"hi":59.6,"ph":0.0,"obs":29.7},"Thaba-Tseka|Mahobong":{"s":50.2,"lo":41.3,"hi":58.2,"ph":0.0,"obs":29.9},"Thaba-Tseka|Mapoteng":{"s":50.8,"lo":42.0,"hi":58.9,"ph":0.0,"obs":30.3},"Thaba-Tseka|Mokhele":{"s":46.2,"lo":37.3,"hi":54.3,"ph":0.0,"obs":33.3},"Thaba-Tseka|Nkau":{"s":44.8,"lo":36.0,"hi":52.9,"ph":0.0,"obs":31.2},"Thaba-Tseka|Semongkong":{"s":46.6,"lo":37.8,"hi":54.7,"ph":0.0,"obs":34.4},"Thaba-Tseka|Semonkong":{"s":53.2,"lo":44.4,"hi":61.3,"ph":0.01,"obs":35.3},"Thaba-Tseka|Thaba-Tseka Town":{"s":52.8,"lo":44.0,"hi":60.9,"ph":0.0,"obs":34.1}},"districts":{"Berea":{"s":61.1,"lo":54.9,"hi":66.6,"ph":0.02,"obs":64.6},"Butha-Buthe":{"s":67.5,"lo":61.3,"hi":73.1,"ph":0.32,"obs":70.3},"Leribe":{"s":59.1,"lo":52.9,"hi":64.7,"ph":0.01,"obs":50.9},"Mafeteng":{"s":65.1,"lo":58.9,"hi":70.6,"ph":0.12,"obs":55.4},"Maseru":{"s":67.6,"lo":61.4,"hi":73.1,"ph":0.32,"obs":61.4},"Mohale's Hoek":{"s":55.3,"lo":49.1,"hi":60.9,"ph":0.01,"obs":54.4},"Mokhotlong":{"s":66.9,"lo":60.7,"hi":72.5,"ph":0.28,"obs":70.2},"Qacha's Nek":{"s":61.4,"lo":55.2,"hi":67.0,"ph":0.02,"obs":59.1},"Quthing":{"s":56.7,"lo":50.5,"hi":62.2,"ph":0.01,"obs":53.1},"Thaba-Tseka":{"s":50.6,"lo":44.4,"hi":56.2,"ph":0.0,"obs":32.5}},"interval":"80% range from 2024 out-of-sample errors"};
+let VIEW='now', CD_NOW=null, CD_FC=null;
+function buildForecastData(now){
+  const fc=JSON.parse(JSON.stringify(now)); let miss=0;
+  Object.values(fc.districts).forEach(d=>{
+    const f=FORECAST.districts[d.district]; if(!f){miss++;return;}
+    d.obs_now=d.risk_score; d.fc=f; d.risk_score=f.s; d.risk_level=RL(f.s);
+    (d.communities||[]).forEach(c=>{
+      const g=FORECAST.communities[d.district+'|'+c.name]; if(!g){miss++;return;}
+      c.fc=g; c.risk_score=g.s; c.risk_level=RL(g.s);
+    });
+  });
+  if(miss) console.warn('Forecast missing for',miss,'districts/communities');
+  return fc;
+}
+function setView(v){
+  VIEW=v; const t=document.querySelector('.tab.active'); if(t) t.click();
+}
+function fcBanner(d){
+  if(VIEW!=='fc'||!d.fc) return '';
+  const f=d.fc;
+  return `<div class="fcbox"><b>Forecast for ${FORECAST.target}</b> · score <b>${f.s.toFixed(1)}</b> (80% range ${f.lo.toFixed(0)}–${f.hi.toFixed(0)}) · chance of High <b>${Math.round(f.ph*100)}%</b><br>Last observed in the dataset (${FORECAST.base}): ${f.obs.toFixed(1)}. Indicator readings below are the latest observed values, not forecasts.</div>`;
+}
+</script>
 
 <script>
 function switchMobileTab(tab, btn) {
@@ -4189,6 +4334,181 @@ openDist = function(name) {
     openBottomSheet(name);
   }
 };
+</script>
+
+
+<script>
+/* ── SCENARIO SIMULATOR ─────────────────────────────────────────────
+   Takes each district's baseline from care_ai_output.json (CD) and shows how a
+   weather shock would move it. Rule-based teaching model: NOT the CARE-AI model. */
+const SIM={d:null,rain:0,drop:0,snow:0};
+const simClamp=(x,a=0,b=100)=>Math.min(b,Math.max(a,x));
+// Rates and temperatures differ between data files, so baselines are scaled against the loaded dataset (min..max across districts).
+function simRange(key){
+  const v=Object.values(CD.districts).map(x=>+x[key]||0);
+  return [Math.min(...v),Math.max(...v)];
+}
+function simNorm(key,val){
+  const [lo,hi]=simRange(key); return hi>lo?simClamp((val-lo)/(hi-lo)*100):50;
+}
+function simCalc(d,s){
+  const a=s.rain/100, wet=Math.max(0,a), dry=Math.max(0,-a), hi=d.highland, wash=1-d.safe_water/100;
+  const t=d.temp-s.drop;
+  const coldBase=simNorm('temp',2*simRange('temp')[1]-d.temp)*0.6;      // colder district => higher baseline
+  const coldNow=simClamp(coldBase+s.drop*(hi?5:3.5));
+  const dia=simNorm('diarrhoea_rate',d.diarrhoea_rate)*0.55+15+wet*(20+80*wash)+dry*10;
+  const ari=simNorm('ari_rate',d.ari_rate)*0.55+15+s.drop*(hi?3:2);
+  const hypo=coldNow*0.7+s.snow*(hi?.3:.12)+(hi?8:0);
+  const sam=20+(100-d.safe_water)*.9+(hi?8:0)+dry*40+s.snow*(hi?.25:.1);
+  const score=d.risk_score+wet*(10+40*wash)+dry*9+s.drop*(hi?1.6:.8)+s.snow/100*(hi?12:5);
+  return {score:simClamp(score),conds:[
+    ['Diarrhoeal disease',simClamp(dia)],['Acute respiratory infection',simClamp(ari)],
+    ['Hypothermia (proxy)',simClamp(hypo)],['Severe acute malnutrition (proxy)',simClamp(sam)]]};
+}
+const simLvl=v=>v>=70?['High',HIGH]:v>=45?['Medium',MED]:['Low',LOW];
+const SIM_ACT={
+  'Diarrhoeal disease':'Pre-position ORS and zinc; chlorinate community water points; alert CHWs for household visits.',
+  'Acute respiratory infection':'Warn clinics to expect more pneumonia; check oxygen and antibiotic stock.',
+  'Hypothermia (proxy)':'Send blanket and warm-clothing kits; reinforce skin-to-skin care for newborns.',
+  'Severe acute malnutrition (proxy)':'Bring forward MUAC screening and RUTF supply, especially where roads may close.'
+};
+const SIM_PRE={normal:[0,0,0],cold:[-10,10,60],flood:[90,0,10],drought:[-90,0,0]};
+
+function renderSim(c){
+  const names=Object.keys(CD.districts).sort();
+  if(!SIM.d||!CD.districts[SIM.d]) SIM.d=names.includes('Maseru')?'Maseru':names[0];
+  c.innerHTML=`<div class="sim">
+   <div class="sim-l">
+     <h3>Weather scenario</h3>
+     <label for="sim-d">District</label>
+     <select id="sim-d">${names.map(n=>`<option value="${ea(n)}">${n}</option>`).join('')}</select>
+     <label for="sim-rain">Rainfall vs. district average <output id="sim-rainO"></output></label>
+     <input id="sim-rain" type="range" min="-100" max="100" step="5">
+     <label for="sim-drop">Cold snap (below normal) <output id="sim-dropO"></output></label>
+     <input id="sim-drop" type="range" min="0" max="15" step="1">
+     <label for="sim-snow">Snow / road disruption <output id="sim-snowO"></output></label>
+     <input id="sim-snow" type="range" min="0" max="100" step="5">
+     <div class="sim-pre">
+       <button data-p="normal">Baseline</button><button data-p="cold">Cold snap</button>
+       <button data-p="flood">Flooding</button><button data-p="drought">Drought</button>
+     </div>
+     <div class="sim-note"><b>How to read this.</b> Baselines come from the dashboard data (prototype, notional). The scenario is a simple rule-based what-if, not a CARE-AI forecast. Hypothermia and malnutrition have no rates in the dataset yet, so those two bars are illustrative proxies.</div>
+   </div>
+   <div class="sim-r" id="sim-out" aria-live="polite"></div>
+  </div>`;
+  const q=id=>document.getElementById(id);
+  q('sim-d').value=SIM.d; q('sim-rain').value=SIM.rain; q('sim-drop').value=SIM.drop; q('sim-snow').value=SIM.snow;
+  const upd=()=>{
+    SIM.d=q('sim-d').value; SIM.rain=+q('sim-rain').value; SIM.drop=+q('sim-drop').value; SIM.snow=+q('sim-snow').value;
+    q('sim-rainO').textContent=(SIM.rain>0?'+':'')+SIM.rain+'%';
+    q('sim-dropO').textContent=SIM.drop?'−'+SIM.drop+' °C':'none';
+    q('sim-snowO').textContent=SIM.snow+'%';
+    simResults();
+  };
+  ['sim-d','sim-rain','sim-drop','sim-snow'].forEach(id=>q(id).addEventListener('input',upd));
+  c.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    [SIM.rain,SIM.drop,SIM.snow]=SIM_PRE[b.dataset.p];
+    q('sim-rain').value=SIM.rain;q('sim-drop').value=SIM.drop;q('sim-snow').value=SIM.snow;upd();
+  });
+  q('sim-out').addEventListener('click',e=>{
+    const r=e.target.closest('tr[data-d]'); if(r){q('sim-d').value=r.dataset.d;upd();}
+  });
+  upd();
+}
+
+function simResults(){
+  const d=CD.districts[SIM.d], zero={rain:0,drop:0,snow:0};
+  const now=simCalc(d,SIM), base=simCalc(d,zero);
+  const [lv,col]=simLvl(now.score), delta=now.score-d.risk_score;
+  const ds=(delta>=0?'+':'')+delta.toFixed(1);
+  const rows=Object.values(CD.districts).map(x=>({x,s:simCalc(x,SIM).score})).sort((a,b)=>b.s-a.s);
+  const top=now.conds.map((k,i)=>({n:k[0],v:k[1],b:base.conds[i][1]})).sort((a,b)=>(b.v-b.b)-(a.v-a.b)||b.v-a.v);
+  const acts=now.conds.filter(k=>k[1]>=45).sort((a,b)=>b[1]-a[1]).slice(0,3).map(k=>`<li><b>${k[0].replace(' (proxy)','')}:</b> ${SIM_ACT[k[0]]}</li>`);
+  document.getElementById('sim-out').innerHTML=`
+   <div class="sim-head"><h2>${d.district}</h2><span class="sim-badge" style="background:${col}">${lv} risk</span></div>
+   <div class="sim-sub">Score <b>${now.score.toFixed(1)}</b> (baseline <b>${d.risk_score.toFixed(1)}</b>, change <b>${ds}</b>) · ${d.u5_population.toLocaleString()} children under 5 · ${d.highland?'Highland':'Lowland'}</div>
+   <div class="sim-cond"><h3 style="margin-top:8px">Illness pressure under this scenario</h3>
+   ${now.conds.map((k,i)=>{const [l,cc]=simLvl(k[1]);return `<div class="sim-row"><div class="t"><span>${k[0]}</span><span>${k[1].toFixed(0)} · ${l}</span></div>
+     <div class="sim-bar" role="img" aria-label="${k[0]} ${k[1].toFixed(0)} of 100, ${l}"><i style="width:${k[1]}%;background:${cc}"></i><u style="left:${base.conds[i][1]}%" title="Baseline"></u></div></div>`}).join('')}
+   <div class="sim-legend">Dark tick = baseline weather. Scores are relative (0–100), not case counts.</div></div>
+   <h3>Suggested early actions</h3>
+   <ul class="sim-act">${acts.length?acts.join(''):'<li>No action needed beyond routine surveillance and the standard CHW schedule.</li>'}</ul>
+   <h3>All districts under this scenario</h3>
+   <table class="sim-tbl"><thead><tr><th>District</th><th class="num">Baseline</th><th class="num">Scenario</th><th class="num">Change</th></tr></thead><tbody>
+   ${rows.map(({x,s})=>{const dl=s-x.risk_score;return `<tr data-d="${ea(x.district)}" class="${x.district===SIM.d?'on':''}"><td><span class="sim-dot" style="background:${simLvl(s)[1]}"></span>${x.district}</td><td class="num">${x.risk_score.toFixed(1)}</td><td class="num">${s.toFixed(1)}</td><td class="num">${dl>=0?'+':''}${dl.toFixed(1)}</td></tr>`}).join('')}
+   </tbody></table>`;
+}
+</script>
+
+
+<script>
+/* ── MODEL RESULTS ─ figures from Climate_Health_Risk_Kids_Under_5.ipynb (RF/XGBoost importances and confusion matrices re-run with the notebook's seeds; accuracy and AUC match the notebook). */
+const MODEL_RESULTS={"models":[{"id":"xgb","name":"XGBoost","acc":0.9705,"auc":0.9954,"p":[0.94,0.99,0.9],"r":[0.96,0.97,0.96],"f":[0.95,0.98,0.93],"macro":0.96,"cm":[[135,5,0],[8,580,8],[0,3,75]],"imp":[["diarrhoea_rate_per1000",0.3275],["rainfall_mm",0.2101],["ari_rate_per1000",0.174],["urban_pct",0.0636],["mean_altitude_m",0.0427],["temperature_mean_c",0.025],["stunting_pct_dhs",0.0246],["ari_cases_u5",0.0245],["safe_water_pct",0.0222],["diarrhoea_cases_u5",0.0206]],"impLabel":"Built-in importance (gain)"},{"id":"rf","name":"Random Forest","acc":0.9459,"auc":0.9877,"p":[0.89,0.97,0.88],"r":[0.94,0.96,0.86],"f":[0.92,0.96,0.87],"macro":0.92,"cm":[[132,8,0],[16,571,9],[0,11,67]],"imp":[["diarrhoea_rate_per1000",0.248],["rainfall_mm",0.1968],["diarrhoea_cases_u5",0.161],["ari_rate_per1000",0.1006],["ari_cases_u5",0.0687],["frost_days",0.0385],["temperature_mean_c",0.0341],["urban_pct",0.0234],["mean_altitude_m",0.0222],["spi_drought_index",0.0206]],"impLabel":"Built-in importance (mean impurity decrease)"},{"id":"cnn","name":"1D CNN","acc":0.9312,"auc":0.9871,"p":[0.86,0.98,0.76],"r":[0.95,0.92,0.96],"f":[0.9,0.95,0.85],"macro":0.9,"cm":[[133,7,0],[22,550,24],[0,3,75]],"imp":[["diarrhoea_rate_per1000",0.2184],["ari_rate_per1000",0.1686],["rainfall_mm",0.1521],["ari_cases_u5",0.113],["diarrhoea_cases_u5",0.0951],["frost_days",0.0297],["temperature_mean_c",0.0297],["safe_water_pct",0.0162],["sam_rate_per1000",0.016],["snow_access_risk",0.0113]],"impLabel":"Permutation importance (eli5)","cv":"5-fold CV accuracy 95.77% \u00b1 0.65%"}],"support":[140,596,78],"classes":["Low","Medium","High"]};
+
+let mdlSel='xgb';
+function renderModels(c){
+  const M=MODEL_RESULTS, best=M.models.reduce((a,b)=>b.acc>a.acc?b:a), pc=v=>(v*100).toFixed(1)+'%';
+  c.innerHTML=`<div class="mdl">
+   <h2>Forecast model: next month's risk</h2>
+   <div class="sub">Uses only information available <b>before</b> the month being predicted · trained ${FORECAST.train} · tested on ${FORECAST.test} (${FORECAST.n_test.toLocaleString()} community-months the model never saw)</div>
+   <div class="mdl-cards">
+     <div class="mdl-card best"><b class="n">Score error (MAE)</b><div class="big">${FORECAST.table[3].mae}</div><div class="kv"><span>Persistence</span><span>${FORECAST.table[0].mae}</span></div><div class="kv"><span>Climatology</span><span>${FORECAST.table[1].mae}</span></div><div class="kv"><span>Districts only</span><span>${FORECAST.dist_bt.mae} vs ${FORECAST.dist_bt.mae_persist}</span></div></div>
+     <div class="mdl-card best"><b class="n">Level accuracy</b><div class="big">${(FORECAST.table[3].acc*100).toFixed(0)}%</div><div class="kv"><span>Persistence</span><span>${(FORECAST.table[0].acc*100).toFixed(0)}%</span></div><div class="kv"><span>Macro F1</span><span>${FORECAST.table[3].f1} vs ${FORECAST.table[0].f1}</span></div></div>
+     <div class="mdl-card best"><b class="n">High-risk ranking (AUC)</b><div class="big">${FORECAST.table[3].auc}</div><div class="kv"><span>Persistence</span><span>${FORECAST.table[0].auc}</span></div><div class="kv"><span>Watch at ≥${FORECAST.thresholdHigh}: caught</span><span>${Math.round(FORECAST.table[3].hrec*100)}%</span></div><div class="kv"><span>Watch precision</span><span>${Math.round(FORECAST.table[3].hprec*100)}%</span></div></div>
+   </div>
+   <h3>Does it beat simple guesses? (2024 test year)</h3>
+   <table class="sim-tbl"><thead><tr><th>Method</th><th class="num">MAE ↓</th><th class="num">Accuracy</th><th class="num">Macro F1</th><th class="num">High AUC</th><th class="num">High caught</th><th class="num">High precision</th></tr></thead><tbody>
+   ${FORECAST.table.map((t,i)=>`<tr style="${i===3?'font-weight:700;background:#eef6fd':''}"><td>${t.name}</td><td class="num">${t.mae}</td><td class="num">${(t.acc*100).toFixed(1)}%</td><td class="num">${t.f1}</td><td class="num">${t.auc}</td><td class="num">${Math.round(t.hrec*100)}%</td><td class="num">${Math.round(t.hprec*100)}%</td></tr>`).join('')}</tbody></table>
+   <div class="sub" style="margin-top:6px">"High caught / precision" is the same watch flag for every method: predicted score ≥ ${FORECAST.thresholdHigh} (threshold picked on 2023 data only) against actual High (≥ 70). *Uses the real next-month rainfall and temperature as if a perfect seasonal outlook existed, so treat it as an upper bound.</div>
+   <h3>Forecast error by month (2024), model vs. "same as this month"</h3>
+   <div class="fcbars">${FORECAST.monthly.map(m=>`<div><div class="pair"><i style="height:${m[1]/14*100}px;background:var(--blue)" title="Model ${m[1]}"></i><i style="height:${m[2]/14*100}px;background:#C8D0DC" title="Persistence ${m[2]}"></i></div>${MONTHS[m[0]-1]}</div>`).join('')}</div>
+   <div class="sub"><span style="color:var(--blue)">■</span> XGBoost forecast &nbsp; <span style="color:#98a3b3">■</span> persistence · bar height = average score error (lower is better)</div>
+   <div class="mdl-cm" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="cmt"><div class="t">Forecast confusion matrix (rows = actual, columns = forecast)</div><div class="cmg"><div class="h"></div>${MODEL_RESULTS.classes.map(k=>`<div class="h">${k}</div>`).join('')}
+     ${FORECAST.cm.map((row,i)=>`<div class="h" style="padding-top:10px">${MODEL_RESULTS.classes[i]}</div>`+row.map((v,j)=>{const a=v/Math.max(...FORECAST.cm.flat());return `<div style="background:rgba(0,119,204,${(0.06+0.9*a).toFixed(2)});color:${a>.45?'#fff':'var(--text)'};${i===j?'font-weight:700':''}">${v}</div>`}).join('')).join('')}</div></div>
+    <div class="cmt"><div class="t">What the forecast relies on</div>${FORECAST.imp.slice(0,6).map(([n,v])=>`<div class="fi" style="grid-template-columns:150px 1fr 44px"><span>${n}</span><span class="b"><i style="width:${v/FORECAST.imp[0][1]*100}%"></i></span><span class="v">${v.toFixed(2)}</span></div>`).join('')}</div>
+   </div>
+   <div class="mdl-warn" style="margin-top:14px;border-left-color:var(--blue);background:#eef6fd"><b>What this does and does not show</b>
+    <ul>
+     <li><b>It is a genuine out-of-sample test.</b> Every prediction uses only earlier months, and the test year comes entirely after the training years, so the score formula cannot be re-learned from future inputs.</li>
+     <li><b>Horizon is one month,</b> because the dataset is monthly. It cannot support the 14-day window used elsewhere in the project.</li>
+     <li><b>One test year, notional data.</b> Three years of history is thin; treat the gaps between methods as indicative, not proven. The watch flag is deliberately sensitive: only about 1 in 5 flagged community-months turned out High, so expect false alarms.</li>
+     <li><b>Weak spots:</b> Low-risk months are often forecast as Medium (see matrix), and High at the strict ≥70 level is caught only about a quarter of the time. A watch flag at ≥60 catches most High months, but the simple baselines do almost as well at that (82% vs 87%), so the model's real gains are in score error, overall accuracy and ranking, not in extra High-risk alerts.</li>
+     <li>Switch the map to <b>Forecast · Jan 2025</b> to see the model's predictions for every district and community, with an 80% range and chance of High.</li>
+    </ul></div>
+   <h2 style="margin-top:34px">Same-month classification (not a forecast)</h2>
+   <div class="sub">Predicting <b>risk_level</b> (Low / Medium / High) on 814 held-out records · 80/20 split · SMOTE on training data only · notional DHS-anchored dataset</div>
+   <div class="mdl-cards">${M.models.map(m=>`<div class="mdl-card ${m===best?'best':''}"><b class="n">${m.name}${m===best?' · best':''}</b><div class="big">${pc(m.acc)}</div>
+     <div class="kv"><span>ROC-AUC (weighted)</span><span>${m.auc.toFixed(4)}</span></div>
+     <div class="kv"><span>Macro F1</span><span>${m.macro.toFixed(2)}</span></div>
+     <div class="kv"><span>High-risk recall</span><span>${m.r[2].toFixed(2)}</span></div>
+     <div class="kv"><span>High-risk precision</span><span>${m.p[2].toFixed(2)}</span></div>${m.cv?`<div class="kv"><span>CV</span><span>${m.cv.replace('5-fold CV accuracy ','')}</span></div>`:''}</div>`).join('')}</div>
+   <h3>Per-class performance</h3>
+   <table class="sim-tbl"><thead><tr><th>Model</th><th>Class</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th><th class="num">Test records</th></tr></thead><tbody>
+   ${M.models.map(m=>M.classes.map((k,i)=>`<tr><td>${i?'':m.name}</td><td>${k}</td><td class="num">${m.p[i].toFixed(2)}</td><td class="num">${m.r[i].toFixed(2)}</td><td class="num">${m.f[i].toFixed(2)}</td><td class="num">${M.support[i]}</td></tr>`).join('')).join('')}</tbody></table>
+   <h3>Confusion matrices (rows = actual, columns = predicted)</h3>
+   <div class="mdl-cm">${M.models.map(m=>{const mx=Math.max(...m.cm.flat());return `<div class="cmt"><div class="t">${m.name}</div><div class="cmg"><div class="h"></div>${M.classes.map(k=>`<div class="h">${k}</div>`).join('')}
+     ${m.cm.map((row,i)=>`<div class="h" style="padding-top:10px">${M.classes[i]}</div>`+row.map((v,j)=>{const a=v/mx;return `<div style="background:rgba(0,119,204,${(0.06+0.9*a).toFixed(2)});color:${a>.45?'#fff':'var(--text)'};${i===j?'font-weight:700':''}">${v}</div>`}).join('')).join('')}</div></div>`}).join('')}</div>
+   <h3>What drives the predictions</h3>
+   <div class="mdl-btns" id="mdl-btns">${M.models.map(m=>`<button data-m="${m.id}">${m.name}</button>`).join('')}</div>
+   <div id="mdl-fi"></div>
+   <div class="mdl-warn"><b>Read before relying on the same-month numbers</b>
+    <ul>
+     <li><b>For the section above only: the label is a rule, not an outcome.</b> In CARES.csv, risk_level follows risk_score exactly (Low &lt; 45, Medium 45–69.9, High ≥ 70), and risk_score appears to be built from the same disease rates, rainfall and WASH inputs the models see (a linear fit on those inputs already explains about 70% of it). The models are probably re-learning the scoring formula, so the accuracy is not evidence of forecasting skill.</li>
+     <li><b>Random split.</b> Rows from the same communities and months sit in both training and test sets. A fair test would hold out whole months or districts.</li>
+     <li><b>Notional data.</b> None of this is a validated clinical or epidemiological result.</li>
+     <li><b>Notebook text vs. computed importances.</b> The notebook summary names safe water, sanitation and urbanisation as top drivers, but the importances above (diarrhoea rate, ARI rate, rainfall) are what the models actually computed, and all three agree.</li>
+     <li>Class order 0/1/2 = Low/Medium/High. Random Forest accuracy shows 0.9459 unrounded (0.95 in the notebook).</li>
+    </ul></div>
+  </div>`;
+  const draw=()=>{
+    const m=M.models.find(x=>x.id===mdlSel), mx=m.imp[0][1];
+    document.getElementById('mdl-fi').innerHTML=`<div class="sub">${m.impLabel} · top 10 of 17 features</div>`+m.imp.map(([n,v])=>`<div class="fi"><span>${n}</span><span class="b"><i style="width:${v/mx*100}%"></i></span><span class="v">${v.toFixed(3)}</span></div>`).join('');
+    document.querySelectorAll('#mdl-btns button').forEach(b=>b.classList.toggle('on',b.dataset.m===mdlSel));
+  };
+  document.getElementById('mdl-btns').onclick=e=>{const b=e.target.closest('button');if(b){mdlSel=b.dataset.m;draw();}};
+  draw();
+}
 </script>
 
 </body>

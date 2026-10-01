@@ -55,6 +55,35 @@ Model compilation (compile) and training (fit).
 **json:** For working with JSON data, specifically for structuring and printing the project_summary dictionary.
 
 
+**The CARES DEMO RESULTS**
 
+**Model Performance and Comparison**
+
+
+All three models demonstrated strong performance in classifying 'risk_level', with the XGBoost Classifier emerging as the top performer.
+
+Convolutional Neural Network (CNN):
+
+Test Accuracy: 0.9214 Weighted ROCAUC: 0.9750 Mean Cross-Validation Accuracy: 0.9508 (+/- 0.0075), indicating good stability. 
+
+Random Forest Classifier:
+
+Test Accuracy: 0.95 Weighted ROCAUC: 0.9877
+
+XGBoost Classifier (Best Performing Model):
+
+Test Accuracy: 0.9705 Weighted ROCAUC: 0.9954 XGBoost significantly outperformed both the CNN and Random Forest in terms of both accuracy and ROCAUC, demonstrating its superior predictive power for this task.
+
+**Feature Importance Analysis**
+
+The feature importance analyses across all models (Permutation Importance & SHAP for CNN, intrinsic importance for Random Forest and XGBoost) converged on several key factors:
+
+Consistently Important Features:
+
+Features such as diarrhoea_rate_per1000, rainfall_mm, ari_rate_per1000, urban_pct, and mean_altitude_m were repeatedly identified as highly influential by all models, especially by XGBoost. Key Drivers of Risk: Generally, indicators related to public health (like diarrhoea_rate_per1000, ari_rate_per1000, sam_rate_per1000) and environmental factors (like rainfall_mm, temperature_mean_c) played critical roles in predicting risk levels. Infrastructure-related features (safe_water_pct, improved_sanit_pct) also showed high importance.
+
+**Conclusion**
+
+The analysis confirms that advanced machine learning techniques are highly effective for risk level prediction in this context. The XGBoost Classifier stands out as the most robust and accurate model among those evaluated. The consistent identification of key features across different model architectures provides strong insights into the underlying drivers of risk, which can inform targeted interventions and decision-making.
 
 

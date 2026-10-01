@@ -81,26 +81,6 @@ The feature importance analyses across all models (Permutation Importance & SHAP
 Consistently Important Features:
 
 Features such as diarrhoea_rate_per1000, rainfall_mm, ari_rate_per1000, urban_pct, and mean_altitude_m were repeatedly identified as highly influential by all models, especially by XGBoost. Key Drivers of Risk: Generally, indicators related to public health (like diarrhoea_rate_per1000, ari_rate_per1000, sam_rate_per1000) and environmental factors (like rainfall_mm, temperature_mean_c) played critical roles in predicting risk levels. Infrastructure-related features (safe_water_pct, improved_sanit_pct) also showed high importance.
-Data schema
-CARES.csv (4,068 rows × 29 columns)
-One row per community per month: 113 communities (96 distinct names; some placeholder names repeat across districts) × 36 months (2022–2024), across 10 districts.
-
-Group	Columns
-Identifiers	year, month, district, community, record_type
-Context	elevation_zone, highland, mean_altitude_m, urban_pct, u5_population
-Climate	rainfall_mm, temperature_min_c, temperature_max_c, temperature_mean_c, frost_days, spi_drought_index, snow_access_risk
-Child health	diarrhoea_rate_per1000, diarrhoea_cases_u5, ari_rate_per1000, ari_cases_u5, sam_rate_per1000, sam_cases_u5
-Water, sanitation, nutrition	safe_water_pct, improved_sanit_pct, stunting_pct_dhs, wasting_pct_dhs
-Labels	risk_score, risk_level (Low < 45, Medium 45–69.9, High ≥ 70)
-Model inputs (17): rainfall_mm, temperature_mean_c, frost_days, spi_drought_index, snow_access_risk, the six child-health columns, safe_water_pct, improved_sanit_pct, stunting_pct_dhs, wasting_pct_dhs, mean_altitude_m, urban_pct. The target is risk_level. risk_score is excluded from the inputs to prevent label leakage.
-
-care_ai_output.json
-Level	Fields
-Top level	generated_at, model_version, model_architecture, rf_accuracy, cnn_accuracy, cnn_high_risk_recall, cross_validation_mean, data_source, districts, trends
-districts[name]	district, risk_score, risk_level, confidence, diarrhoea_rate, ari_rate, rainfall, safe_water, temp, highland, u5_population, lat, lng, communities
-communities[]	name, risk_score, risk_level, diarrhoea_rate, ari_rate, rainfall, safe_water, temp, highland, u5_pop
-trends[name]	Monthly risk-score series (12 values)
-
 
 **Conclusion**
 

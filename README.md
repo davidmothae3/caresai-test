@@ -1,89 +1,286 @@
-**INTRODUCTION OF THE PROJECT**
+<div align="center">
 
-**CARES: Climate Anticipatory Risk and Early Warning System**
+# CARES
 
-TitaniumX Group | Mohloli Innovation Hub
+### Climate Anticipatory Risk and Early Warning System
 
-Children across Lesotho face a growing convergence of climate sensitive health threats, including diarrhoeal disease, acute respiratory infections, hypothermia, and severe acute malnutrition. These risks are shaped not only by poverty and access to services, but also by climate variability and environmental vulnerability. Rainfall anomalies, drought conditions, temperature drops, flooding, and snow related road disruption can all affect whether vulnerable children receive timely care and essential services. Yet very few climate and health platforms have been designed from within Lesotho to anticipate these risks before they escalate.
+**AI-powered anticipatory intelligence for child health in Lesotho**
 
-CARES is an open source, AI powered anticipatory intelligence platform (CARE-AI) designed to answer one operational question: given current and forecast climate conditions, what child health risks are likely to emerge in the next two to four weeks, where will they occur, and what action should be taken before impacts escalate?
+[![Live demo](https://img.shields.io/badge/live-demo-0b6e4f?style=for-the-badge)](https://davidmothae3.github.io/caresai-test/)
+[![Status](https://img.shields.io/badge/status-prototype-orange?style=for-the-badge)](#limitations-and-responsible-use)
+[![Data](https://img.shields.io/badge/data-notional-lightgrey?style=for-the-badge)](#data)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 
-Built on a modular architecture designed for DHIS2 integration, CARES combines climate data, child health indicators, geospatial analysis, machine learning, and explainable AI to generate district risk classifications, preparedness alerts, and decision support outputs. Its predictive engine, CARE AI, uses classification models to identify elevated risk districts before disease burden increases. Risk intelligence is presented through an interactive dashboard and a planned community alert layer, RiSe, intended for future use by community health workers and local response systems.
+TitaniumX Group | Mohloli Digital and Innovation Hub
 
-CARES has progressed beyond concept stage into a functioning prototype developed in Lesotho by TitaniumX Group. The prototype uses notional and DHS anchored data to demonstrate predictive feasibility, model explainability, district risk mapping, and dashboard based alert generation. It does not use individual child records and should not be interpreted as a validated clinical or epidemiological prediction system. 
+</div>
 
-As the flagship platform of the Mohloli innovation ecosystem, CARES represents an Africa built digital public infrastructure concept grounded in local disease burden, local data realities, and local ownership. It is designed to support future government integration, open source collaboration, phased national scale up, and adaptation to other climate vulnerable settings.
+> [!WARNING]
+> **Prototype built on notional, DHS-anchored data.** CARES does not use individual child records and is **not** a validated clinical or epidemiological prediction system. Outputs are for demonstration and require human review.
 
+---
 
-**Technologies used in the prototype**
+## Contents
 
-Here's a summary of the technologies used in this project and their functions:
+1. [Overview](#overview)
+2. [How it works](#how-it-works)
+3. [Dashboard](#dashboard)
+4. [Data](#data)
+5. [Models and results](#models-and-results)
+6. [Technology stack](#technology-stack)
+7. [Repository structure](#repository-structure)
+8. [Run it locally](#run-it-locally)
+9. [Configuration](#configuration)
+10. [Roadmap](#roadmap)
+11. [Limitations and responsible use](#limitations-and-responsible-use)
+12. [License](#license)
 
-**pandas (pd)**: Utilized for efficient data manipulation and analysis, such as loading CSV files, handling missing values (dropna), encoding categorical features, and managing DataFrames.
+---
 
-**NumPy (np):** Used for numerical operations, especially in array manipulation (e.g., np.argmax for CNN predictions) and statistical calculations.
+## Overview
 
-**Matplotlib (plt) & Seaborn (sns):** Essential for data visualization, creating plots such as distribution plots (countplot), confusion matrices, feature importance bar charts, and scatter plots.
+Children across Lesotho face a growing convergence of climate-sensitive health threats: diarrhoeal disease, acute respiratory infections, hypothermia and severe acute malnutrition. These risks are shaped by poverty and access to services, and also by rainfall anomalies, drought, temperature drops, flooding and snow-related road disruption. Very few climate and health platforms have been designed from within Lesotho to anticipate them before they escalate.
 
-**Scikit-learn (sklearn):** A comprehensive machine learning library used for:
+CARES is an open-source platform built to answer one operational question:
 
-**train_test_split:** Dividing data into training and testing sets.
+> *Given current and forecast climate conditions, what child health risks are likely to emerge, where will they occur, and what action should be taken before impacts escalate?*
 
-**StandardScaler:** Feature scaling to standardize data.
+It combines climate data, child health indicators, geospatial analysis, machine learning and explainable AI to produce:
 
-**RandomForestClassifier:** Implementing the Random Forest model for classification.
+- **District and community risk classifications** (Low, Medium, High)
+- **Preparedness alerts** with suggested actions
+- **Decision-support views**: trends, scenarios and model transparency
 
-**classification_report, confusion_matrix, accuracy_score, roc_auc_score:** Evaluating model performance with various metrics.
+Its predictive engine, **CARE-AI**, identifies elevated-risk areas before disease burden increases. The architecture is modular and designed for future DHIS2 integration. A planned community alert layer, **RiSe**, is intended for community health workers and local response systems.
 
-**KFold:** Performing cross-validation for model stability assessment.
+CARES has moved beyond concept into a working prototype developed in Lesotho by TitaniumX Group, as the flagship platform of the Mohloli innovation ecosystem: an Africa-built digital public infrastructure concept grounded in local disease burden, local data realities and local ownership.
 
-**Imbalanced-learn (imblearn.over_sampling.SMOTE):** Addressing class imbalance in the dataset by oversampling the minority classes.
+---
 
-**TensorFlow/Keras (tensorflow.keras):** The deep learning framework used for:
+## How it works
 
-**Sequential:** Building the Convolutional Neural Network (CNN) model layer by layer.
+```mermaid
+flowchart LR
+    subgraph SRC["1 · Data"]
+        A1["DHS-anchored notional data<br/>no individual child records"]
+        A2["Climate indicators<br/>rainfall, temperature, frost, SPI"]
+        A3["Child health indicators<br/>diarrhoea, ARI, SAM, WASH"]
+    end
 
-**Conv1D, MaxPooling1D, Flatten, Dense, Dropout:** Defining the architecture of the CNN, including convolutional layers, pooling, flattening, dense layers, and dropout for regularization.
-Model compilation (compile) and training (fit).
+    A1 --> B
+    A2 --> B
+    A3 --> B
+    B[("CARES.csv<br/>113 communities x 36 months<br/>Jan 2022 to Dec 2024")]
 
-**XGBoost (xgboost, XGBClassifier):** An optimized gradient boosting library used for building the XGBoost Classifier model, known for its performance and efficiency.
+    subgraph ML["2 · CARE-AI modelling (Jupyter notebook)"]
+        C1["Clean, encode, scale<br/>SMOTE on training data only"]
+        C2["Risk level classifiers<br/>XGBoost, Random Forest, 1D CNN"]
+        C3["One-month-ahead forecast<br/>XGBoost, trained 2022-23, tested 2024"]
+        C4["Explainability<br/>SHAP, permutation importance"]
+        C1 --> C2
+        C1 --> C3
+        C2 --> C4
+    end
 
-**ELI5 (eli5, eli5.sklearn.PermutationImportance):** A library for debugging machine learning classifiers and explaining their predictions, specifically used here for Permutation Importance to understand feature relevance in the CNN.
+    B --> C1
+    B --> D
 
-**SHAP (shap, shap.GradientExplainer):** A powerful tool for explaining the output of any machine learning model. It was used with GradientExplainer to provide local and global explanations of the CNN's predictions through SHAP values and summary plots.
+    subgraph APP["3 · Dashboard (index.html on GitHub Pages)"]
+        D["Browser loads CARES.csv<br/>community score = CSV risk_score<br/>district score = mean of communities"]
+        D --> E1["Risk Map<br/>observed Dec 2024 or forecast Jan 2025"]
+        D --> E2["Trends"]
+        D --> E3["Alerts"]
+        D --> E4["Scenarios"]
+        D --> E5["Model Results"]
+    end
 
-**json:** For working with JSON data, specifically for structuring and printing the project_summary dictionary.
+    C3 -. "forecast values embedded" .-> E1
+    C2 -. "metrics embedded" .-> E5
+    W["Weather proxy (optional)<br/>OpenWeatherMap 5-day rain"] -.-> E4
 
+    E1 --> F["District health teams<br/>and disaster managers"]
+    E3 --> F
+    F --> G["Planned: DHIS2 integration<br/>and RiSe community alerts"]
+```
 
-**The CARES DEMO RESULTS**
+**In short:** `CARES.csv` is the single source of data. The notebook trains and evaluates the models on it, and the dashboard reads the same file directly in the browser. Forecast values and model metrics produced by the notebook are embedded in the dashboard page.
 
-**Model Performance and Comparison**
+---
 
+## Dashboard
 
-All three models demonstrated strong performance in classifying 'risk_level', with the XGBoost Classifier emerging as the top performer.
+**Live:** <https://davidmothae3.github.io/caresai-test/>
 
-Convolutional Neural Network (CNN):
+| Tab | What it shows |
+|---|---|
+| **Risk Map** | District and community risk on a map. Switch between **Observed (Dec 2024)** and **Forecast (Jan 2025)**. Forecast view adds an 80% range and a chance of High. High-risk communities blink; unverified locations are shown dashed. |
+| **Trends** | Monthly district risk for 2024. |
+| **Alerts** | Districts ranked by risk with indicators, suggested actions and a downloadable alert JSON. |
+| **Scenarios** | What-if adjustments (rain, cold snap, snow) applied to a district's current score. Rule-based, not a model. |
+| **Model Results** | Classifier comparison, forecast accuracy against simple baselines, and an explicit list of what the results do and do not show. |
 
-Test Accuracy: 0.9214 Weighted ROCAUC: 0.9750 Mean Cross-Validation Accuracy: 0.9508 (+/- 0.0075), indicating good stability. 
+**Risk bands** (used on the map, in lists and in alerts):
 
-Random Forest Classifier:
+| Level | Score |
+|---|---|
+| 🔴 High | 70 and above |
+| 🟠 Medium | 45 to 69 |
+| 🟢 Low | below 45 |
 
-Test Accuracy: 0.95 Weighted ROCAUC: 0.9877
+Communities are listed highest risk first.
 
-XGBoost Classifier (Best Performing Model):
+---
 
-Test Accuracy: 0.9705 Weighted ROCAUC: 0.9954 XGBoost significantly outperformed both the CNN and Random Forest in terms of both accuracy and ROCAUC, demonstrating its superior predictive power for this task.
+## Data
 
-**Feature Importance Analysis**
+`CARES.csv` holds one row per community per month.
 
-The feature importance analyses across all models (Permutation Importance & SHAP for CNN, intrinsic importance for Random Forest and XGBoost) converged on several key factors:
+| | |
+|---|---|
+| **Coverage** | 10 districts, 113 community units, Jan 2022 to Dec 2024 (4,068 rows) |
+| **Climate** | `rainfall_mm`, `temperature_min_c` / `max_c` / `mean_c`, `frost_days`, `spi_drought_index`, `snow_access_risk` |
+| **Child health** | `diarrhoea_rate_per1000`, `ari_rate_per1000`, `sam_rate_per1000` (plus case counts) |
+| **Services and context** | `safe_water_pct`, `improved_sanit_pct`, `stunting_pct_dhs`, `wasting_pct_dhs`, `mean_altitude_m`, `urban_pct`, `u5_population`, `elevation_zone`, `highland` |
+| **Targets** | `risk_score` (0 to 100) and `risk_level` (Low, Medium, High) |
 
-Consistently Important Features:
+**How the dashboard aggregates it:** the "now" view uses the latest month. A community's score is its own `risk_score`. A district's score is the simple mean of its communities, and its population is the sum.
 
-Features such as diarrhoea_rate_per1000, rainfall_mm, ari_rate_per1000, urban_pct, and mean_altitude_m were repeatedly identified as highly influential by all models, especially by XGBoost. Key Drivers of Risk: Generally, indicators related to public health (like diarrhoea_rate_per1000, ari_rate_per1000, sam_rate_per1000) and environmental factors (like rainfall_mm, temperature_mean_c) played critical roles in predicting risk levels. Infrastructure-related features (safe_water_pct, improved_sanit_pct) also showed high importance.
+> [!NOTE]
+> The data is notional and DHS-anchored. Keep the file named `CARES.csv` in the repository root, because the dashboard requests it by that name.
 
-**Conclusion**
+---
 
-The analysis confirms that advanced machine learning techniques are highly effective for risk level prediction in this context. The XGBoost Classifier stands out as the most robust and accurate model among those evaluated. The consistent identification of key features across different model architectures provides strong insights into the underlying drivers of risk, which can inform targeted interventions and decision-making.
+## Models and results
 
+### Same-month risk classification
 
+Predicts `risk_level` (Low, Medium, High) on 814 held-out records (80/20 split, SMOTE applied to training data only).
+
+| Model | Test accuracy | Weighted ROC-AUC | Macro F1 | High-risk recall | High-risk precision |
+|---|---|---|---|---|---|
+| **XGBoost** (best) | **0.9705** | **0.9954** | **0.96** | 0.96 | 0.90 |
+| Random Forest | 0.9459 | 0.9877 | 0.92 | 0.86 | 0.88 |
+| 1D CNN | 0.9312 | 0.9871 | 0.90 | 0.96 | 0.76 |
+
+The 1D CNN's 5-fold cross-validation accuracy is 95.77% (± 0.65%). These figures match the **Model Results** tab of the dashboard.
+
+**Consistent drivers across models:** `diarrhoea_rate_per1000`, `ari_rate_per1000`, `sam_rate_per1000`, `rainfall_mm`, `temperature_mean_c`, `urban_pct`, `mean_altitude_m`, and infrastructure indicators (`safe_water_pct`, `improved_sanit_pct`). Importance was assessed with permutation importance and SHAP (CNN) and intrinsic importance (Random Forest, XGBoost).
+
+### One-month-ahead forecast
+
+An XGBoost model that uses only information available before the month being predicted. Trained on 2022 to 2023 and tested on 2024 (1,356 community-months it never saw).
+
+| Method | Score error (MAE, lower is better) | Level accuracy | High-risk ranking (AUC) |
+|---|---|---|---|
+| Persistence (next month = this month) | 7.63 | 69.7% | 0.824 |
+| Climatology (average for that month) | 6.26 | 74.8% | 0.782 |
+| Seasonal naive (same month last year) | 7.49 | 69.8% | 0.824 |
+| **XGBoost forecast** | **5.32** | **80.2%** | **0.887** |
+
+At district level the forecast error is 3.79 against 5.88 for persistence.
+
+**Forecast model drivers:** the one-month-ahead model relies most on `frost_days` (importance 0.28), then `temperature_mean_c`, `stunting_pct_dhs`, month-of-year seasonality and `diarrhoea_rate_per1000`.
+
+> [!IMPORTANT]
+> These are strong results on notional data, not evidence of real-world performance. See the limitations below.
+
+---
+
+## Technology stack
+
+| Layer | Tools |
+|---|---|
+| **Data handling** | pandas, NumPy |
+| **Visualisation (notebook)** | Matplotlib, Seaborn |
+| **Classical ML** | scikit-learn (train/test split, scaling, Random Forest, metrics, K-fold), imbalanced-learn (SMOTE) |
+| **Gradient boosting** | XGBoost |
+| **Deep learning** | TensorFlow / Keras (1D CNN: Conv1D, MaxPooling1D, Flatten, Dense, Dropout) |
+| **Explainability** | SHAP (GradientExplainer), ELI5 (permutation importance) |
+| **Dashboard** | Vanilla HTML, CSS and JavaScript, Leaflet and marker clustering, Turf.js, Chart.js |
+| **Weather (optional)** | OpenWeatherMap through a small Cloudflare Worker proxy |
+| **Hosting** | GitHub Pages |
+
+---
+
+## Repository structure
+
+```
+caresai-test/
+├── index.html                          # The dashboard (single file, served by GitHub Pages)
+├── CARES.csv                           # Dataset: read by the dashboard and the notebook
+├── config.js                           # Optional dashboard settings (weather proxy)
+├── worker.js                           # Optional Cloudflare Worker that hides the weather API key
+├── Climate_Health_Risk_Kids_Under_5.ipynb   # Modelling notebook
+├── README.md
+└── LICENSE
+```
+
+---
+
+## Run it locally
+
+The dashboard loads `CARES.csv` with `fetch`, so open it through a local web server, not by double-clicking the file.
+
+```bash
+git clone https://github.com/davidmothae3/caresai-test.git
+cd caresai-test
+python -m http.server 8000
+# open http://localhost:8000
+```
+
+The header badge shows where the data came from: `Data: CARES.csv · 2024-12`. If the CSV cannot be loaded, the page falls back to an embedded copy of the December 2024 data and the badge turns amber.
+
+---
+
+## Configuration
+
+`config.js` is optional. With empty values the dashboard works fully, and the weather panel simply reads "not configured".
+
+```js
+window.CARES_CONFIG = {
+  wxProxy: 'https://your-worker.workers.dev', // recommended
+  owmKey: ''                                  // private local testing only
+};
+```
+
+> [!CAUTION]
+> `config.js` is public on GitHub Pages. **Never commit a real OpenWeatherMap key.** Deploy `worker.js` as a Cloudflare Worker, store the key there as a secret named `OWM_KEY`, and put only the Worker URL in `wxProxy`.
+
+The 5-day rainfall forecast shown in the weather panel is informational and is **not** used in the risk score.
+
+---
+
+## Roadmap
+
+- [x] Working prototype with district and community risk mapping
+- [x] Explainable models and out-of-sample forecast evaluation
+- [x] Dashboard-based alert generation
+- [ ] DHIS2 integration, subject to Ministry of Health data access clearance
+- [ ] **RiSe** community alert layer for community health workers
+- [ ] Validation on real surveillance data
+- [ ] Time-based and district-held-out evaluation
+- [ ] Phased national scale-up and adaptation to other climate-vulnerable settings
+
+---
+
+## Limitations and responsible use
+
+- **Notional data.** Results describe model behaviour on a constructed dataset, not real-world accuracy.
+- **Random split for classification.** Rows from the same communities and months appear in both training and test sets, so the same-month classifier scores are optimistic. A fair test would hold out whole months or districts.
+- **Classification is not forecasting.** The same-month classifiers label the current period. Only the XGBoost forecast looks ahead, and its horizon is **one month** because the data is monthly. It does not support a 14-day window.
+- **One test year.** Three years of history is thin. Treat differences between methods as indicative, not proven.
+- **False alarms.** A watch flag at a score of 60 catches about 87% of High months, but only about 1 in 5 flagged months turns out High.
+- **Location accuracy.** Some community map positions are approximate and are shown with dashed markers.
+- **Human review required.** Outputs support decisions; they do not replace public health judgement.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE). Copyright (c) 2026 TitaniumX Group (Pty) Ltd.
+
+<div align="center">
+
+**Built in Lesotho by TitaniumX Group · Mohloli Digital and Innovation Hub**
+
+</div>

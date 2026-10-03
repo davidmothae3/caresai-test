@@ -4117,6 +4117,12 @@ async function init() {
 
 // Risk level must always follow the score using the legend thresholds (High >= 70, Medium 45-69, Low < 45).
 // Some data exports carry a stale risk_level (e.g. Butha-Buthe scored 62.6 but was labelled High), so recompute it here.
+// Community lists are shown highest risk first. Sorted in place so row indexes used by the click handlers stay consistent.
+function sortCommunities(data){
+  Object.values(data.districts).forEach(d=>{
+    if(d.communities) d.communities.sort((a,b)=>(b.risk_score-a.risk_score)||String(a.name).localeCompare(String(b.name)));
+  });
+}
 function normalizeRiskLevels(data){
   const fixed=[];
   Object.values(data.districts).forEach(d=>{
@@ -4125,6 +4131,7 @@ function normalizeRiskLevels(data){
     (d.communities||[]).forEach(c=>{const cl=RL(c.risk_score);if(c.risk_level!==cl){c.risk_level=cl;}});
   });
   if(fixed.length) console.warn('Risk level corrected to match score:',fixed);
+  sortCommunities(data);
 }
 function buildDashboard(data) {
   normalizeRiskLevels(data);
@@ -4173,6 +4180,7 @@ function buildForecastData(now){
     });
   });
   if(miss) console.warn('Forecast missing for',miss,'districts/communities');
+  sortCommunities(fc);
   return fc;
 }
 function setView(v){

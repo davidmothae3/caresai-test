@@ -241,7 +241,7 @@ These are strong results on notional data, not evidence of real-world performanc
 | **Deep learning** | TensorFlow / Keras (1D CNN: Conv1D, MaxPooling1D, Flatten, Dense, Dropout) |
 | **Explainability** | SHAP (GradientExplainer), ELI5 (permutation importance) |
 | **Dashboard** | Vanilla HTML, CSS and JavaScript, Leaflet and marker clustering, Turf.js, Chart.js |
-| **Weather (optional)** | OpenWeatherMap through a small Cloudflare Worker proxy |
+| **Weather (optional)** | OpenWeatherMap through a Cloudflare Worker proxy you provide (not deployed in the public demo) |
 | **Hosting** | GitHub Pages |
 
 [↑ Back to top](#top)
@@ -252,14 +252,17 @@ These are strong results on notional data, not evidence of real-world performanc
 
 ```
 caresai-test/
-├── index.html                          # The dashboard (single file, served by GitHub Pages)
-├── CARES.csv                           # Dataset: read by the dashboard and the notebook
-├── config.js                           # Optional dashboard settings (weather proxy)
-├── worker.js                           # Optional Cloudflare Worker that hides the weather API key
-├── Climate_Health_Risk_Kids_Under_5.ipynb   # Modelling notebook
+├── index.html                               # The dashboard (single file, served by GitHub Pages)
+├── CARES.csv                                # Dataset: read by the dashboard and the notebook
+├── Climate_Health_Risk_Kids_Under_5.ipynb   # Modelling notebook (classifiers, SHAP, comparison)
+├── forecast_model.py                        # One-month-ahead forecast (XGBoost, trained 2022-23, tested 2024)
+├── geodata_audit.csv                        # Audit of the 113 community map positions (source, approximate or not)
 ├── README.md
-└── LICENSE
+├── LICENSE
+└── .github/redeploy-trigger.txt             # Helper file used to redeploy GitHub Pages
 ```
+
+`config.js` and `worker.js` (the optional weather proxy described under [Configuration](#configuration)) are **not part of this repository**, and the dashboard runs fully without them.
 
 [↑ Back to top](#top)
 
@@ -284,7 +287,9 @@ The header badge shows where the data came from: `Data: CARES.csv · 2024-12`. I
 
 ## Configuration
 
-`config.js` is optional. With empty values the dashboard works fully, and the weather panel simply reads "not configured".
+`config.js` and `worker.js` are optional and are **not included in this repository**. The public demo runs without them, and the weather panel simply reads "not configured".
+
+To enable the weather panel, create a `config.js` next to `index.html`:
 
 ```
 window.CARES_CONFIG = {
@@ -294,7 +299,7 @@ window.CARES_CONFIG = {
 ```
 
 > [!CAUTION]
-`config.js` is public on GitHub Pages. **Never commit a real OpenWeatherMap key.** Deploy `worker.js` as a Cloudflare Worker, store the key there as a secret named `OWM_KEY`, and put only the Worker URL in `wxProxy`.
+`config.js` is public on GitHub Pages. **Never commit a real OpenWeatherMap key.** Run a small Cloudflare Worker that holds the key as a secret, and put only the Worker URL in `wxProxy`.
 
 The 5-day rainfall forecast shown in the weather panel is informational and is **not** used in the risk score.
 
